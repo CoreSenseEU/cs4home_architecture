@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef CS4HOME_CORE__FLOW_HPP_
 #define CS4HOME_CORE__FLOW_HPP_
 
@@ -27,20 +26,36 @@
 namespace cs4home_core
 {
 
+/**
+ * @class Flow
+ * @brief Represents a sequence of nodes within a robotic system, with utilities
+ *        to manage and print the node sequence.
+ */
 class Flow
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(Flow)
 
+  /**
+   * @brief Constructs a Flow object with a specified sequence of nodes.
+   * @param nodes A vector of node names to initialize the flow sequence.
+   */
   explicit Flow(const std::vector<std::string> & nodes);
 
+  /**
+   * @brief Prints the sequence of nodes in the flow to the standard output.
+   */
   void print() const;
+
+  /**
+   * @brief Retrieves the sequence of nodes in the flow.
+   * @return A constant reference to the vector of node names.
+   */
   const std::vector<std::string> & get_nodes() const {return nodes_;}
 
 private:
-  std::vector<std::string> nodes_;
+  std::vector<std::string> nodes_; /**< Sequence of nodes in the flow. */
 };
-
 
 }  // namespace cs4home_core
 
@@ -49,6 +64,4 @@ private:
 // #include "rclcpp_components/register_node_macro.hpp"
 //
 // // Register the component with class_loader.
-// // This acts as a sort of entry point, allowing the component to be discoverable when its library
-// // is being loaded into a running process.
-// RCLCPP_COMPONENTS_REGISTER_NODE(cs4home_core::Flow)
+// // This acts as a sort of entry point,

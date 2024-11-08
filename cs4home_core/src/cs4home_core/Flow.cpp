@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include <list>
 #include <string>
 #include <vector>
@@ -26,11 +25,21 @@
 namespace cs4home_core
 {
 
+/**
+ * @brief Constructs a Flow object with a list of nodes.
+ * @param nodes A vector of node names to initialize the flow sequence.
+ */
 Flow::Flow(const std::vector<std::string> & nodes)
 : nodes_(nodes)
 {
 }
 
+/**
+ * @brief Prints the sequence of nodes in the flow to the standard output.
+ *
+ * This function outputs each node name in the flow, prefixed by an arrow (->) to
+ * represent the sequence visually.
+ */
 void
 Flow::print() const
 {

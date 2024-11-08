@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include "cs4home_core/Efferent.hpp"
 #include "cs4home_core/macros.hpp"
 
@@ -21,19 +20,37 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/macros.hpp"
 
+/**
+ * @class SimpleImageOutput
+ * @brief Manages image output by creating publishers for specified topics and
+ *        providing a method to publish image messages.
+ */
 class SimpleImageOutput : public cs4home_core::Efferent
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(SimpleImageOutput)
 
+  /**
+   * @brief Constructs a SimpleImageOutput object and declares necessary parameters.
+   * @param parent Shared pointer to the lifecycle node managing this SimpleImageOutput instance.
+   */
   explicit SimpleImageOutput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
   : Efferent(parent)
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Afferent created: [SimpleImageOutput]");
 
+    // Declares the parameter for output topics.
     parent_->declare_parameter("simple_image_output.topics", output_topic_names_);
   }
 
+  /**
+   * @brief Configures the SimpleImageOutput by creating publishers for each specified topic.
+   *
+   * This method retrieves the topic names from the parameter server and attempts to create
+   * a publisher for each topic to publish `sensor_msgs::msg::Image` messages.
+   *
+   * @return True if all publishers are created successfully.
+   */
   bool configure()
   {
     parent_->get_parameter("simple_image_output.topics", output_topic_names_);
@@ -54,13 +71,18 @@ public:
     return true;
   }
 
+  /**
+   * @brief Publishes an image message to all configured topics.
+   * @param msg Unique pointer to an image message of type `sensor_msgs::msg::Image`.
+   */
   void publish_image(sensor_msgs::msg::Image::UniquePtr msg)
   {
     publish(std::move(msg));
   }
 
 private:
-  std::vector<std::string> output_topic_names_;
+  std::vector<std::string> output_topic_names_; /**< List of output topics to publish images. */
 };
 
+/// Registers the SimpleImageOutput component with the ROS 2 class loader
 CS_REGISTER_COMPONENT(SimpleImageOutput)

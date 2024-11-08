@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef CS4HOME_CORE__EFFERENT_HPP_
 #define CS4HOME_CORE__EFFERENT_HPP_
 
@@ -22,19 +21,42 @@
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/macros.hpp"
+#include "rclcpp/serialization.hpp"
 
 namespace cs4home_core
 {
 
+/**
+ * @class Efferent
+ * @brief Manages efferent operations in the robotic system, including the configuration
+ *        of publishers and message broadcasting.
+ */
 class Efferent
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(Efferent)
 
+  /**
+   * @brief Constructs an Efferent object associated with a parent lifecycle node.
+   * @param parent Shared pointer to the lifecycle node managing this Efferent instance.
+   */
   explicit Efferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
 
+  /**
+   * @brief Configures the Efferent component.
+   * @return True if configuration is successful.
+   */
   virtual bool configure() = 0;
 
+  /**
+   * @brief Publishes a serialized message to all configured publishers.
+   *
+   * This templated method serializes the provided message and broadcasts it to
+   * each publisher in the `pubs_` list.
+   *
+   * @tparam MessageT Type of the message to publish.
+   * @param msg Unique pointer to the message to broadcast.
+   */
   template<class MessageT>
   void publish(std::unique_ptr<MessageT> msg)
   {
@@ -49,9 +71,17 @@ public:
   }
 
 protected:
+  /**< Shared pointer to the parent lifecycle node. */
   rclcpp_lifecycle::LifecycleNode::SharedPtr parent_;
+  /**< List of generic publishers. */
   std::vector<std::shared_ptr<rclcpp::GenericPublisher>> pubs_;
 
+  /**
+   * @brief Creates a publisher for a specified topic and message type.
+   * @param topic The topic name to publish messages to.
+   * @param type The type of messages to publish on the topic.
+   * @return True if the publisher was created successfully.
+   */
   bool create_publisher(const std::string & topic, const std::string & type);
 };
 
