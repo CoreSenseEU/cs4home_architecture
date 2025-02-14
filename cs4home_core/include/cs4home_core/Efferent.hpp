@@ -19,26 +19,26 @@
 #include <string>
 #include <vector>
 
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp/serialization.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-namespace cs4home_core
-{
+namespace cs4home_core {
 
 /**
  * @class Efferent
- * @brief Manages efferent operations in the robotic system, including the configuration
- *        of publishers and message broadcasting.
+ * @brief Manages efferent operations in the robotic system, including the
+ * configuration of publishers and message broadcasting.
  */
-class Efferent
-{
+class Efferent {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(Efferent)
 
   /**
-   * @brief Constructs an Efferent object associated with a parent lifecycle node.
-   * @param parent Shared pointer to the lifecycle node managing this Efferent instance.
+   * @brief Constructs an Efferent object associated with a parent lifecycle
+   * node.
+   * @param parent Shared pointer to the lifecycle node managing this Efferent
+   * instance.
    */
   explicit Efferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
 
@@ -55,17 +55,15 @@ public:
    * each publisher in the `pubs_` list.
    *
    * @tparam MessageT Type of the message to publish.
-   * @param msg Unique pointer to the message to broadcast.
+   * @param msg shared pointer to the message to broadcast.
    */
-  template<class MessageT>
-  void publish(std::unique_ptr<MessageT> msg)
-  {
+  template <class MessageT> void publish(std::shared_ptr<MessageT> msg) {
     rclcpp::Serialization<MessageT> serializer;
     auto untyped_msg = rclcpp::SerializedMessage();
 
     serializer.serialize_message(msg.get(), &untyped_msg);
 
-    for (auto & pub : pubs_) {
+    for (auto &pub : pubs_) {
       pub->publish(untyped_msg);
     }
   }
@@ -82,9 +80,9 @@ protected:
    * @param type The type of messages to publish on the topic.
    * @return True if the publisher was created successfully.
    */
-  bool create_publisher(const std::string & topic, const std::string & type);
+  bool create_publisher(const std::string &topic, const std::string &type);
 };
 
-}  // namespace cs4home_core
+} // namespace cs4home_core
 
-#endif  // CS4HOME_CORE__EFFERENT_HPP_
+#endif // CS4HOME_CORE__EFFERENT_HPP_

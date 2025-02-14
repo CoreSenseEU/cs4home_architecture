@@ -12,22 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include "cs4home_core/Afferent.hpp"
 
-#include "rclcpp/rclcpp.hpp"
 #include "rclcpp/create_generic_subscription.hpp"
-namespace cs4home_core
-{
+#include "rclcpp/rclcpp.hpp"
+namespace cs4home_core {
 
 /**
  * @brief Constructor for the Afferent class.
- * @param parent Shared pointer to the lifecycle node that owns this Afferent instance.
+ * @param parent Shared pointer to the lifecycle node that owns this Afferent
+ * instance.
  */
 Afferent::Afferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-: parent_(parent)
-{
-}
+    : parent_(parent) {}
 
 /**
  * @brief Sets the operation mode and an optional callback function.
@@ -36,25 +33,23 @@ Afferent::Afferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
  * processing mode and an optional callback to handle serialized messages.
  *
  * @param mode The processing mode for the Afferent object.
- * @param cb A callback function to process serialized messages, used if the mode is CALLBACK.
+ * @param cb A callback function to process serialized messages, used if the
+ * mode is CALLBACK.
  */
-void
-Afferent::set_mode(
-  EfferentProcessMode mode,
-  std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb)
-{
+void Afferent::set_mode(
+    EfferentProcessMode mode,
+    std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)> cb) {
   if (mode == CALLBACK) {
     if (cb) {
       callback_ = cb;
     } else {
-      RCLCPP_WARN(
-        parent_->get_logger(), "[Afferent] Error setting callback: not function specified");
+      RCLCPP_WARN(parent_->get_logger(),
+                  "[Afferent] Error setting callback: not function specified");
       return;
     }
   }
   mode_ = mode;
 }
-
 
 /**
  * @brief Creates a subscription to a specified topic and type.
@@ -67,37 +62,34 @@ Afferent::set_mode(
  * @param type The type of messages expected on the topic.
  * @return True if the subscription was created successfully.
  */
-bool
-Afferent::create_subscriber(const std::string & topic, const std::string & type)
-{
-  RCLCPP_DEBUG(
-    parent_->get_logger(),
-    "[Afferent] Creating subscription [%s, %s]",
-    topic.c_str(), type.c_str());
+bool Afferent::create_subscriber(const std::string &topic,
+                                 const std::string &type) {
+  RCLCPP_DEBUG(parent_->get_logger(),
+               "[Afferent] Creating subscription [%s, %s]", topic.c_str(),
+               type.c_str());
 
   auto sub = rclcpp::create_generic_subscription(
-    parent_->get_node_topics_interface(), topic, type, 100,
-    [&](std::unique_ptr<rclcpp::SerializedMessage> msg)
-    {
-      if (mode_ == CALLBACK) {
-        if (callback_) {
-          callback_(std::move(msg));
+      parent_->get_node_topics_interface(), topic, type, 100,
+      [&](std::shared_ptr<rclcpp::SerializedMessage> msg) {
+        if (mode_ == CALLBACK) {
+          if (callback_) {
+            callback_(std::move(msg));
+          } else {
+            RCLCPP_WARN(
+                parent_->get_logger(),
+                "[Afferent] Error calling callback: not function specified");
+          }
         } else {
-          RCLCPP_WARN(
-            parent_->get_logger(), "[Afferent] Error calling callback: not function specified");
+          msg_queue_.push(std::move(msg));
+          if (msg_queue_.size() > max_queue_size_) {
+            msg_queue_.pop();
+          }
         }
-      } else {
-        msg_queue_.push(std::move(msg));
-        if (msg_queue_.size() > max_queue_size_) {
-          msg_queue_.pop();
-        }
-      }
-    });
-
+      });
 
   subs_.push_back(sub);
 
   return true;
 }
 
-}  // namespace cs4home_core
+} // namespace cs4home_core
