@@ -8,13 +8,10 @@ public:
       const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
       : cs4home_core::CognitiveModule("sound_module_cognitive", options) {
     RCLCPP_INFO(this->get_logger(), "SoundModuleCognitive initialized");
-
-    // Suscribirse a datos de audio o inicializar componentes específicos
   }
 
   void process_sound_data() {
     RCLCPP_INFO(this->get_logger(), "Processing sound data...");
-    // Implementar lógica específica de procesamiento de sonido aquí
   }
 };
 

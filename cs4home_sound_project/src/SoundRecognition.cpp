@@ -20,6 +20,11 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
+#include <tensorflow/lite/interpreter.h>
+#include <tensorflow/lite/interpreter_builder.h>
+#include <tensorflow/lite/kernels/register.h>
+#include <tensorflow/lite/model.h>
+
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 
@@ -53,7 +58,7 @@ public:
     RCLCPP_INFO(parent_->get_logger(), "Processing audio message of size: %zu",
                 msg->uint8_data.size());
 
-    std::vector<float> float_audio(1024);
+    /* std::vector<float> float_audio(1024);
     for (size_t i = 0; i < msg->uint8_data.size(); ++i) {
       if (msg->uint8_data[i] > 255) {
         RCLCPP_ERROR(parent_->get_logger(),
@@ -61,7 +66,7 @@ public:
                      msg->uint8_data[i]);
       }
       float_audio[i] = static_cast<float>(msg->uint8_data[i]) / 128.0f;
-    }
+    } */
   }
 
   /**
