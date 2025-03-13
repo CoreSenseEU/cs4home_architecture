@@ -18,8 +18,10 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "cs4home_core/CognitiveModule.hpp"
+#include "cs4home_core/Flow.hpp"
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -35,7 +37,9 @@ public:
   using CallbackReturnT =
     rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
-  explicit Master(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit Master(
+    const std::string & name,
+    const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   CallbackReturnT on_configure(const rclcpp_lifecycle::State & state);
   CallbackReturnT on_activate(const rclcpp_lifecycle::State & state);
@@ -44,8 +48,10 @@ public:
   CallbackReturnT on_shutdown(const rclcpp_lifecycle::State & state);
   CallbackReturnT on_error(const rclcpp_lifecycle::State & state);
 
+  const std::map<std::string, Flow::SharedPtr> & get_flows() const {return flows_;}
+
 protected:
-  std::map<std::string, cs4home_core::CognitiveModule::SharedPtr> cog_modules_;
+  std::map<std::string, Flow::SharedPtr> flows_;
 };
 
 }  // namespace cs4home_core

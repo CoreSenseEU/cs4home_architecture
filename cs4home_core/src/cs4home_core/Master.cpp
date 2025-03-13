@@ -18,9 +18,11 @@
 namespace cs4home_core
 {
 
-Master::Master(const rclcpp::NodeOptions & options)
-: LifecycleNode("master", options)
+Master::Master(const std::string & name, const rclcpp::NodeOptions & options)
+: LifecycleNode(name, options)
 {
+  std::vector<std::string> flows;
+  declare_parameter("flows", std::vector<std::string>{});
 }
 
 using CallbackReturnT =
@@ -30,6 +32,17 @@ CallbackReturnT
 Master::on_configure(const rclcpp_lifecycle::State & state)
 {
   (void)state;
+
+  std::vector<std::string> flows;
+  get_parameter("flows", flows);
+
+  for (const auto & flow: flows) {
+    std::vector<std::string> flow_cms;
+    declare_parameter(flow, flow_cms);
+    get_parameter(flow, flow_cms);
+
+    flows_[flow] = Flow::make_shared(flow, flow_cms);
+  }
 
   return CallbackReturnT::SUCCESS;
 }

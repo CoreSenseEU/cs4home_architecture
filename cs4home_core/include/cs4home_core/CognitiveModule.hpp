@@ -30,11 +30,12 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "rclcpp_cascade_lifecycle/rclcpp_cascade_lifecycle.hpp"
 
 namespace cs4home_core
 {
 
-class CognitiveModule : public rclcpp_lifecycle::LifecycleNode
+class CognitiveModule : public rclcpp_cascade_lifecycle::CascadeLifecycleNode
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(CognitiveModule)

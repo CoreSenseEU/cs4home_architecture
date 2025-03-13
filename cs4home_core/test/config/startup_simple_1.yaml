@@ -1,3 +1,8 @@
+master_1:
+  ros__parameters:
+    flows: [flow_1]
+    flow_1: [cognitive_module_1, cognitive_module_2]
+
 cognitive_module_1:
   ros__parameters:
     core: image_filter
@@ -7,5 +12,17 @@ cognitive_module_1:
     efferent: simple_image_output
     simple_image_output:
       topics: ["/detections"]
+    meta: default_meta
+    coupling: default_coupling
+
+cognitive_module_2:
+  ros__parameters:
+    core: image_filter
+    afferent: simple_image_input
+    simple_image_input:
+      topics: ["/detections"]
+    efferent: simple_image_output
+    simple_image_output:
+      topics: ["/detections2"]
     meta: default_meta
     coupling: default_coupling

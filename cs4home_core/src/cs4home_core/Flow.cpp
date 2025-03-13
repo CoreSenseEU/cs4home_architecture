@@ -26,9 +26,40 @@
 namespace cs4home_core
 {
 
-Flow::Flow(const std::vector<std::string> & nodes)
-: nodes_(nodes)
+Flow::Flow(const std::string & name)
+: CascadeLifecycleNode(name)
 {
+  trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+}
+
+Flow::Flow(const std::string & name, const std::vector<std::string> & nodes)
+: Flow(name)
+{
+  set_flow(nodes);
+}
+
+void
+Flow::set_flow(const std::vector<std::string> & nodes)
+{
+  clear_activation();
+
+  nodes_ = nodes;
+
+  for (const auto & node : nodes) {
+    add_activation(node);
+  }
+}
+
+void
+Flow::activate()
+{
+  trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
+}
+
+void
+Flow::deactivate()
+{
+  trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
 }
 
 void
@@ -39,5 +70,6 @@ Flow::print() const
   }
   std::cout << std::endl;
 }
+
 
 }  // namespace cs4home_core
