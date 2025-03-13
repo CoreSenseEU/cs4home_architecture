@@ -16,15 +16,28 @@
 #include "cs4home_core/Afferent.hpp"
 
 #include "rclcpp/rclcpp.hpp"
-
+#include "rclcpp/create_generic_subscription.hpp"
 namespace cs4home_core
 {
 
+/**
+ * @brief Constructor for the Afferent class.
+ * @param parent Shared pointer to the lifecycle node that owns this Afferent instance.
+ */
 Afferent::Afferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
 : parent_(parent)
 {
 }
 
+/**
+ * @brief Sets the operation mode and an optional callback function.
+ *
+ * This function allows configuring the Afferent object with a specific
+ * processing mode and an optional callback to handle serialized messages.
+ *
+ * @param mode The processing mode for the Afferent object.
+ * @param cb A callback function to process serialized messages, used if the mode is CALLBACK.
+ */
 void
 Afferent::set_mode(
   EfferentProcessMode mode,
@@ -42,6 +55,18 @@ Afferent::set_mode(
   mode_ = mode;
 }
 
+
+/**
+ * @brief Creates a subscription to a specified topic and type.
+ *
+ * This method sets up a subscription to receive messages on a given topic with
+ * a specified message type. The received messages are either processed through
+ * a callback (if set) or stored in an internal message queue.
+ *
+ * @param topic The topic name to subscribe to.
+ * @param type The type of messages expected on the topic.
+ * @return True if the subscription was created successfully.
+ */
 bool
 Afferent::create_subscriber(const std::string & topic, const std::string & type)
 {
@@ -68,6 +93,7 @@ Afferent::create_subscriber(const std::string & topic, const std::string & type)
         }
       }
     });
+
 
   subs_.push_back(sub);
 

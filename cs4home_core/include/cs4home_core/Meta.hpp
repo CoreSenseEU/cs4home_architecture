@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #ifndef CS4HOME_CORE__META_HPP_
 #define CS4HOME_CORE__META_HPP_
 
@@ -22,16 +21,30 @@
 namespace cs4home_core
 {
 
+/**
+ * @class Meta
+ * @brief Provides a meta-component for managing additional lifecycle functions
+ *        within a robotic system, associating with a parent lifecycle node.
+ */
 class Meta
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(Meta)
 
+  /**
+   * @brief Constructs a Meta object associated with a parent lifecycle node.
+   * @param parent Shared pointer to the lifecycle node managing this Meta instance.
+   */
   explicit Meta(rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
 
+  /**
+   * @brief Configures the Meta component.
+   * @return True if configuration is successful.
+   */
   bool configure();
 
 protected:
+  /// < Shared pointer to the parent lifecycle node.
   rclcpp_lifecycle::LifecycleNode::SharedPtr parent_;
 };
 

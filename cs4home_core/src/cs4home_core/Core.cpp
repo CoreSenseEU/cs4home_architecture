@@ -17,11 +17,19 @@
 namespace cs4home_core
 {
 
+/**
+ * @brief Constructs a Core object associated with a given lifecycle node.
+ * @param parent Shared pointer to the lifecycle node managing this Core instance.
+ */
 Core::Core(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
 : parent_(parent)
 {
 }
 
+/**
+ * @brief Configures the Core component.
+ * @return True if configuration is successful.
+ */
 bool
 Core::configure()
 {

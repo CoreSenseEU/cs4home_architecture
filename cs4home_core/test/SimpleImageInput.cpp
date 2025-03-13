@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 #include "cs4home_core/Afferent.hpp"
 #include "cs4home_core/macros.hpp"
 
@@ -21,19 +20,37 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/macros.hpp"
 
+/**
+ * @class SimpleImageInput
+ * @brief Manages image input by creating subscribers for specified topics and
+ *        handling image messages from these sources.
+ */
 class SimpleImageInput : public cs4home_core::Afferent
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(SimpleImageInput)
 
+  /**
+   * @brief Constructs a SimpleImageInput object and declares necessary parameters.
+   * @param parent Shared pointer to the lifecycle node managing this SimpleImageInput instance.
+   */
   explicit SimpleImageInput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
   : Afferent(parent)
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Efferent created: [SimpleImageInput]");
 
+    // Declares the parameter for input topics.
     parent_->declare_parameter("simple_image_input.topics", input_topic_names_);
   }
 
+  /**
+   * @brief Configures the SimpleImageInput by creating subscribers for each specified topic.
+   *
+   * This method retrieves the topic names from the parameter server and attempts to create
+   * a subscription for each topic to receive `sensor_msgs::msg::Image` messages.
+   *
+   * @return True if all subscriptions are created successfully.
+   */
   bool configure() override
   {
     std::string param_name = "simple_image_input.topics";
@@ -61,7 +78,9 @@ public:
   }
 
 private:
+  /**< List of input topics to subscribe to for images. */
   std::vector<std::string> input_topic_names_;
 };
 
+/// Registers the SimpleImageInput component with the ROS 2 class loader
 CS_REGISTER_COMPONENT(SimpleImageInput)
