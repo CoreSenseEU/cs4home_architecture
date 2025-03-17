@@ -63,6 +63,7 @@ public:
   /**
    * @brief Sets the processing mode and an optional callback function.
    *
+   * @param topic The topic to subscribe
    * @param mode Processing mode for handling messages.
    * @param cb Optional callback function for handling serialized messages in CALLBACK mode.
    */
@@ -71,6 +72,17 @@ public:
     EfferentProcessMode mode,
     std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb = nullptr);
 
+  /**
+   * @brief Sets the processing mode and an optional callback function.
+   *
+   * @param topic_idx The index of the topic input.
+   * @param mode Processing mode for handling messages.
+   * @param cb Optional callback function for handling serialized messages in CALLBACK mode.
+   */
+  void set_mode(
+    size_t topic_idx,
+    EfferentProcessMode mode,
+    std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb = nullptr);
 
   /**
    * @brief Gets the current processing mode.

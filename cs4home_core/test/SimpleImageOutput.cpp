@@ -59,7 +59,7 @@ public:
    */
   void publish_image(sensor_msgs::msg::Image::UniquePtr msg)
   {
-    publish(std::move(msg));
+    publish(0, std::move(msg));
   }
 };
 

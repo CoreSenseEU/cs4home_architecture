@@ -39,6 +39,7 @@ Afferent::Afferent(const std::string & name, rclcpp_lifecycle::LifecycleNode::Sh
  * This function allows configuring the Afferent object with a specific
  * processing mode and an optional callback to handle serialized messages.
  *
+ * @param topic The topic to subscribe
  * @param mode The processing mode for the Afferent object.
  * @param cb A callback function to process serialized messages, used if the mode is CALLBACK.
  */
@@ -48,6 +49,42 @@ Afferent::set_mode(
   EfferentProcessMode mode,
   std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb)
 {
+  if (mode == CALLBACK) {
+    if (cb) {
+      callbacks_[topic] = cb;
+    } else {
+      RCLCPP_WARN(
+        parent_->get_logger(), "[Afferent] Error setting callback: not function specified");
+      return;
+    }
+  }
+  mode_ = mode;
+}
+
+/**
+ * @brief Sets the operation mode and an optional callback function.
+ *
+ * This function allows configuring the Afferent object with a specific
+ * processing mode and an optional callback to handle serialized messages.
+ *
+ * @param topic_idx The index of the topic input.
+ * @param mode The processing mode for the Afferent object.
+ * @param cb A callback function to process serialized messages, used if the mode is CALLBACK.
+ */
+void
+Afferent::set_mode(
+  size_t topic_idx,
+  EfferentProcessMode mode,
+  std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb)
+{
+  if (topic_idx >= input_topic_names_.size()) {
+    RCLCPP_WARN(
+      parent_->get_logger(), "[Afferent] Error setting callback: topic index not valid");
+    return;
+  }
+
+  const std::string & topic = input_topic_names_[topic_idx];
+
   if (mode == CALLBACK) {
     if (cb) {
       callbacks_[topic] = cb;

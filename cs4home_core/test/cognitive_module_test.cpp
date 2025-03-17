@@ -234,7 +234,7 @@ TEST(cognitive_module_test, efferent)
   for (int i = 0; i < 10; i++) {
     auto msg = std::make_unique<sensor_msgs::msg::Image>();
     msg->header.frame_id = std::to_string(i);
-    efferent->publish(std::move(msg));
+    efferent->publish(0, std::move(msg));
     exe.spin_some();
   }
 

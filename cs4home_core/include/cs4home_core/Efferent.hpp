@@ -59,16 +59,20 @@ public:
    * @param msg Unique pointer to the message to broadcast.
    */
   template<class MessageT>
-  void publish(std::unique_ptr<MessageT> msg)
+  void publish(size_t topic_index, std::unique_ptr<MessageT> msg)
   {
+    if (topic_index >= pubs_.size()) {
+      RCLCPP_WARN(
+        parent_->get_logger(), "[Efferent] Error publishing: topic index not valid");
+      return;
+    }
+
     rclcpp::Serialization<MessageT> serializer;
     auto untyped_msg = rclcpp::SerializedMessage();
 
     serializer.serialize_message(msg.get(), &untyped_msg);
 
-    for (auto & pub : pubs_) {
-      pub->publish(untyped_msg);
-    }
+    pubs_[topic_index]->publish(untyped_msg);
   }
 
 protected:

@@ -61,7 +61,7 @@ public:
     counter = counter * 2;
     image_msg->header.frame_id = std::to_string(counter);
 
-    efferent_->publish(std::move(image_msg));
+    efferent_->publish(0, std::move(image_msg));
   }
 
   /**
