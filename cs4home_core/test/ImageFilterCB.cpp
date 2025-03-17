@@ -87,12 +87,10 @@ public:
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Core configured");
 
-    afferent_->set_mode(
-      "/image_raw",
-      cs4home_core::Afferent::CALLBACK, std::bind(&ImageFilterCB::process_in_image, this, _1));
-    afferent_->set_mode(
-      "/camera_info",
-      cs4home_core::Afferent::CALLBACK, std::bind(&ImageFilterCB::process_in_camerainfo, this, _1));
+    afferent_->set_mode(0, cs4home_core::Afferent::CALLBACK,
+      std::bind(&ImageFilterCB::process_in_image, this, _1));
+    afferent_->set_mode(1, cs4home_core::Afferent::CALLBACK,
+      std::bind(&ImageFilterCB::process_in_camerainfo, this, _1));
 
     return true;
   }
