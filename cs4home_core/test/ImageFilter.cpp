@@ -18,7 +18,6 @@
 #include "sensor_msgs/msg/image.hpp"
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "rclcpp/macros.hpp"
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
@@ -40,7 +39,7 @@ public:
    */
 
   explicit ImageFilter(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-  : Core(parent)
+  : Core("image_filter", parent)
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Core created: [ImageFilter]");
   }
@@ -70,7 +69,7 @@ public:
    */
   void timer_callback()
   {
-    auto msg = afferent_->get_msg<sensor_msgs::msg::Image>();
+    auto msg = afferent_->get_msg<sensor_msgs::msg::Image>(0);
     if (msg != nullptr) {
       process_in_image(std::move(msg));
     }

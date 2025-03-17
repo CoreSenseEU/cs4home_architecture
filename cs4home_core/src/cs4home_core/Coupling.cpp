@@ -21,8 +21,9 @@ namespace cs4home_core
  * @brief Constructs a Coupling object and assigns the parent lifecycle node.
  * @param parent Shared pointer to the lifecycle node managing this Coupling instance.
  */
-Coupling::Coupling(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-: parent_(parent)
+Coupling::Coupling(const std::string & name, rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
+: parent_(parent),
+  name_(name)
 {
 }
 

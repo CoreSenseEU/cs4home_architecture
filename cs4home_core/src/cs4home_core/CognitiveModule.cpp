@@ -78,10 +78,8 @@ CallbackReturnT CognitiveModule::on_configure(const rclcpp_lifecycle::State & st
     return CallbackReturnT::FAILURE;
   }
 
-
   core_->set_afferent(afferent_);
   core_->set_efferent(efferent_);
-
 
   get_parameter("meta", meta_name_);
   std::string error_meta;

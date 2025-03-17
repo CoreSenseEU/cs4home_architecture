@@ -16,11 +16,12 @@
 #ifndef CS4HOME_CORE__AFFERENT_HPP_
 #define CS4HOME_CORE__AFFERENT_HPP_
 
+#include <map>
 #include <memory>
 #include <utility>
 #include <queue>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -51,13 +52,13 @@ public:
    * @brief Constructor for the Afferent class.
    * @param parent Shared pointer to the lifecycle node managing this instance.
    */
-  explicit Afferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
+  explicit Afferent(const std::string & name, rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
 
   /**
    * @brief Configures the afferent component; intended for subclass implementation.
    * @return True if configuration is successful.
    */
-  virtual bool configure() = 0;
+  virtual bool configure();
 
   /**
    * @brief Sets the processing mode and an optional callback function.
@@ -66,6 +67,7 @@ public:
    * @param cb Optional callback function for handling serialized messages in CALLBACK mode.
    */
   void set_mode(
+    const std::string & topic,
     EfferentProcessMode mode,
     std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb = nullptr);
 
@@ -107,16 +109,43 @@ public:
   /**
    * @brief Retrieves the next message from the queue, if available.
    * @tparam MessageT Type of message to retrieve.
-   * @return A unique pointer to the next message, or nullptr if the queue is empty.
+   * @tparam topic The topic of the associated queue to retrieve the message.
+   * @return A unique pointer to the next message, or nullptr if the queue is
+   * empty or does not exists.
    */
-  template<class MessageT> std::unique_ptr<MessageT> get_msg()
+  template<class MessageT> std::unique_ptr<MessageT> get_msg(const std::string & topic)
   {
-    if (msg_queue_.empty()) {
-      return {};
+    if (msg_queues_.find(topic) == msg_queues_.end() || msg_queues_[topic].empty()) {
+      return nullptr;
     }
 
-    std::unique_ptr<rclcpp::SerializedMessage> msg = std::move(msg_queue_.front());
-    msg_queue_.pop();
+    std::unique_ptr<rclcpp::SerializedMessage> msg = std::move(msg_queues_[topic].front());
+    msg_queues_[topic].pop();
+
+    return get_msg<MessageT>(std::move(msg));
+  }
+
+  /**
+   * @brief Retrieves the next message from the queue, if available.
+   * @tparam MessageT Type of message to retrieve.
+   * @tparam topic_idx The index fn the topic input associated queue to retrieve the message.
+   * @return A unique pointer to the next message, or nullptr if the queue is
+   * empty or does not exists.
+   */
+  template<class MessageT> std::unique_ptr<MessageT> get_msg(size_t topic_idx)
+  {
+    if (topic_idx >= msg_queues_.size()) {
+      return nullptr;
+    }
+
+    const std::string & topic = input_topic_names_[topic_idx];
+
+    if (msg_queues_.find(topic) == msg_queues_.end() || msg_queues_[topic].empty()) {
+      return nullptr;
+    }
+
+    std::unique_ptr<rclcpp::SerializedMessage> msg = std::move(msg_queues_[topic].front());
+    msg_queues_[topic].pop();
 
     return get_msg<MessageT>(std::move(msg));
   }
@@ -124,8 +153,7 @@ public:
 protected:
   /** Shared pointer to the parent node. */
   rclcpp_lifecycle::LifecycleNode::SharedPtr parent_;
-  /** List of subscriptions. */
-  std::vector<std::shared_ptr<rclcpp::GenericSubscription>> subs_;
+  std::string name_;
 
   EfferentProcessMode mode_ {ONDEMAND}; /**< Current processing mode. */
 
@@ -133,11 +161,18 @@ protected:
   const size_t MAX_DEFAULT_QUEUE_SIZE = 100;
   /** Maximum queue size. */
   size_t max_queue_size_ {MAX_DEFAULT_QUEUE_SIZE};
+
+  /** List of subscriptions. */
+  std::vector<std::shared_ptr<rclcpp::GenericSubscription>> subs_;
   /** Queue for serialized messages. */
-  std::queue<std::unique_ptr<rclcpp::SerializedMessage>> msg_queue_;
+  std::map<std::string, std::queue<std::unique_ptr<rclcpp::SerializedMessage>>> msg_queues_;
+  /**< List of input topics to subscribe to for images. */
+  std::vector<std::string> input_topic_names_;
+  /**< List of input topics types. */
+  std::vector<std::string> input_topic_types_;
 
   /** Callback for serialized messages. */
-  std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> callback_;
+  std::map<std::string, std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)>> callbacks_;
 
 
   /**

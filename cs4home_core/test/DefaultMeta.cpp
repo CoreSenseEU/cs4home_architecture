@@ -35,7 +35,7 @@ public:
    * @param parent Shared pointer to the lifecycle node managing this DefaultMeta instance.
    */
   explicit DefaultMeta(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-  : Meta(parent)
+  : Meta("default_meta", parent)
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Meta created: [DefaultMeta]");
   }
