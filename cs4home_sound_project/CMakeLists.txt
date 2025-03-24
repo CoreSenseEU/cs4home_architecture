@@ -15,6 +15,9 @@ find_package(sound_msgs REQUIRED)
 find_package(audio_common_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sound_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 # find_package(tensorflow_ros_cpp REQUIRED)
 
 set(dependencies
@@ -27,6 +30,9 @@ set(dependencies
   audio_common_msgs
   geometry_msgs
   sound_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
   # tensorflow_ros_cpp
 )
 
