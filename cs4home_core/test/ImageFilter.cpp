@@ -17,7 +17,6 @@
 
 #include "sensor_msgs/msg/image.hpp"
 
-#include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 using std::placeholders::_1;
@@ -40,7 +39,7 @@ public:
    */
 
   explicit ImageFilter(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-      : Core(parent) {
+      : Core("image_filter", parent) {
     RCLCPP_DEBUG(parent_->get_logger(), "Core created: [ImageFilter]");
   }
 
@@ -59,7 +58,7 @@ public:
     counter = counter * 2;
     msg->header.frame_id = std::to_string(counter);
 
-    efferent_->publish(std::move(msg));
+    efferent_->publish(0, std::move(msg));
   }
 
   /**
@@ -71,7 +70,7 @@ public:
    * to `process_in_image`.
    */
   void timer_callback() {
-    auto msg = afferent_->get_msg<sensor_msgs::msg::Image>();
+    auto msg = afferent_->get_msg<sensor_msgs::msg::Image>(0);
     if (msg != nullptr) {
       process_in_image(std::move(msg));
     }

@@ -21,6 +21,7 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 using std::placeholders::_1;
+using std::placeholders::_2;
 using namespace std::chrono_literals;
 
 /**
@@ -40,7 +41,7 @@ public:
    * ImageFilterCB instance.
    */
   explicit ImageFilterCB(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-      : Core(parent) {
+      : Core("image_filter_cb", parent) {
     RCLCPP_DEBUG(parent_->get_logger(), "Core created: [ImageFilterCB]");
   }
 
@@ -62,7 +63,17 @@ public:
     counter = counter * 2;
     image_msg->header.frame_id = std::to_string(counter);
 
-    efferent_->publish(std::move(image_msg));
+    efferent_->publish(0, std::move(image_msg));
+  }
+
+  /**
+   * @brief Processes incoming serialized camera info image messages. Do nothing
+   * @param msg Unique pointer to the serialized incoming image message.
+   */
+  void process_in_camerainfo(std::unique_ptr<rclcpp::SerializedMessage> msg) {
+    auto camerainfo_msgs =
+        afferent_->get_msg<sensor_msgs::msg::Image>(std::move(msg));
+    // Nothing to do
   }
 
   /**
@@ -76,8 +87,11 @@ public:
   bool configure() override {
     RCLCPP_DEBUG(parent_->get_logger(), "Core configured");
 
-    afferent_->set_mode(cs4home_core::Afferent::CALLBACK,
+    afferent_->set_mode(0, cs4home_core::Afferent::CALLBACK,
                         std::bind(&ImageFilterCB::process_in_image, this, _1));
+    afferent_->set_mode(
+        1, cs4home_core::Afferent::CALLBACK,
+        std::bind(&ImageFilterCB::process_in_camerainfo, this, _1));
 
     return true;
   }

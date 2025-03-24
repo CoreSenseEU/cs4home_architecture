@@ -28,16 +28,17 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "rclcpp_cascade_lifecycle/rclcpp_cascade_lifecycle.hpp"
 
 namespace cs4home_core
 {
 
+class CognitiveModule : public rclcpp_cascade_lifecycle::CascadeLifecycleNode
 /**
  * @class CognitiveModule
- * @brief Extends the LifecycleNode to manage cognitive processing components in a ROS 2 lifecycle,
+ * @brief Extends the Cascade LifecycleNode to manage cognitive processing components in a ROS 2 lifecycle,
  *        including afferent, efferent, core, meta, and coupling components.
  */
-class CognitiveModule : public rclcpp_lifecycle::LifecycleNode
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(CognitiveModule)

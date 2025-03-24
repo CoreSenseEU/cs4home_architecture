@@ -79,6 +79,7 @@ TEST(cognitive_module_test, afferent_on_demand) {
 
   // Configure topics for afferent component
   std::vector<std::string> topics{"/image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load afferent component and verify successful loading
   auto [afferent, error_afferent] =
@@ -87,6 +88,7 @@ TEST(cognitive_module_test, afferent_on_demand) {
 
   // Set the topics parameter and configure afferent component
   node->set_parameter(rclcpp::Parameter("simple_image_input.topics", topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
   ASSERT_TRUE(afferent->configure());
 
   // Publish test messages to the afferent component's subscribed topic
@@ -105,14 +107,14 @@ TEST(cognitive_module_test, afferent_on_demand) {
 
   // Retrieve and verify messages from the afferent component's queue
   for (int i = 0; i < 10; i++) {
-    auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>();
+    auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>("/image");
     ASSERT_NE(in_msg, nullptr);
     ASSERT_EQ(i, std::atoi(in_msg->header.frame_id.c_str()));
   }
 
   // Verify that further retrieval attempts return `nullptr` as the queue is now
   // empty
-  auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>();
+  auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>("/image");
   ASSERT_EQ(in_msg, nullptr);
 }
 
@@ -138,7 +140,9 @@ TEST(cognitive_module_test, afferent_on_subscription) {
 
   // Setup topics and image storage
   std::vector<std::string> topics{"/image"};
-  std::vector<std::shared_ptr<rclcpp::SerializedMessage>> images;
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
+
+  std::vector<std::unique_ptr<rclcpp::SerializedMessage>> images;
 
   // Load afferent component and verify successful loading
   auto [afferent, error_afferent] =
@@ -147,12 +151,13 @@ TEST(cognitive_module_test, afferent_on_subscription) {
 
   // Set the topics parameter and configure afferent mode
   node->set_parameter(rclcpp::Parameter("simple_image_input.topics", topics));
-  afferent->set_mode(cs4home_core::Afferent::CALLBACK);
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
+  afferent->set_mode("/image", cs4home_core::Afferent::CALLBACK);
 
   ASSERT_EQ(afferent->get_mode(), cs4home_core::Afferent::ONDEMAND);
 
-  afferent->set_mode(cs4home_core::Afferent::CALLBACK,
-                     [&images](std::shared_ptr<rclcpp::SerializedMessage> msg) {
+  afferent->set_mode("/image", cs4home_core::Afferent::CALLBACK,
+                     [&images](std::unique_ptr<rclcpp::SerializedMessage> msg) {
                        images.push_back(std::move(msg));
                      });
   ASSERT_TRUE(afferent->configure());
@@ -213,6 +218,7 @@ TEST(cognitive_module_test, efferent) {
 
   // Configure topics for efferent component
   std::vector<std::string> topics{"/image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load efferent component and verify successful loading
   auto [efferent, error_efferent] =
@@ -221,13 +227,15 @@ TEST(cognitive_module_test, efferent) {
 
   // Set the topics parameter and configure efferent component
   node->set_parameter(rclcpp::Parameter("simple_image_output.topics", topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_output.types", types));
+
   ASSERT_TRUE(efferent->configure());
 
   // Publish test messages via the efferent component
   for (int i = 0; i < 10; i++) {
     auto msg = std::make_shared<sensor_msgs::msg::Image>();
     msg->header.frame_id = std::to_string(i);
-    efferent->publish(std::move(msg));
+    efferent->publish(0, std::move(msg));
     exe.spin_some();
   }
 
@@ -277,6 +285,7 @@ TEST(cognitive_module_test, core) {
   // Setup topics for afferent and efferent components
   std::vector<std::string> in_topics{"/in_image"};
   std::vector<std::string> out_topics{"/out_image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load components
   auto [afferent, error_afferent] =
@@ -292,8 +301,10 @@ TEST(cognitive_module_test, core) {
   // Set parameters and configure components
   node->set_parameter(
       rclcpp::Parameter("simple_image_input.topics", in_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
   node->set_parameter(
       rclcpp::Parameter("simple_image_output.topics", out_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_output.types", types));
   ASSERT_TRUE(afferent->configure());
   ASSERT_TRUE(efferent->configure());
   core->set_afferent(afferent);
@@ -357,6 +368,7 @@ TEST(cognitive_module_test, core_cb) {
   // Setup topics for afferent and efferent components
   std::vector<std::string> in_topics{"/in_image"};
   std::vector<std::string> out_topics{"/out_image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load components
   auto [afferent, error_afferent] =
@@ -372,8 +384,10 @@ TEST(cognitive_module_test, core_cb) {
   // Set parameters and configure components
   node->set_parameter(
       rclcpp::Parameter("simple_image_input.topics", in_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
   node->set_parameter(
       rclcpp::Parameter("simple_image_output.topics", out_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_output.types", types));
   ASSERT_TRUE(afferent->configure());
   ASSERT_TRUE(efferent->configure());
   core->set_afferent(afferent);
@@ -430,7 +444,7 @@ TEST(cognitive_module_test, startup_simple) {
 
   // Verify the number of parameters loaded from the configuration file
   auto params = cm1->list_parameters({}, 0);
-  ASSERT_EQ(params.names.size(), 7u);
+  ASSERT_EQ(params.names.size(), 8u);
 
   // Set up publisher and subscriber nodes for testing message processing
   auto pub_node = rclcpp::Node::make_shared("pub_node");

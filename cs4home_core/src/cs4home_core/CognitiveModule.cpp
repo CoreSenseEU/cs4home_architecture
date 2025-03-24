@@ -22,7 +22,7 @@ namespace cs4home_core {
  */
 CognitiveModule::CognitiveModule(const std::string &name,
                                  const rclcpp::NodeOptions &options)
-    : LifecycleNode(name, options) {
+    : CascadeLifecycleNode(name, options) {
   declare_parameter("core", core_name_);
   declare_parameter("afferent", afferent_name_);
   declare_parameter("efferent", efferent_name_);

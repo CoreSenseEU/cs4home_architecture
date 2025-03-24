@@ -22,6 +22,8 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
+#include "rclcpp_cascade_lifecycle/rclcpp_cascade_lifecycle.hpp"
 
 namespace cs4home_core
 {
@@ -31,7 +33,7 @@ namespace cs4home_core
  * @brief Represents a sequence of nodes within a robotic system, with utilities
  *        to manage and print the node sequence.
  */
-class Flow
+class Flow : public rclcpp_cascade_lifecycle::CascadeLifecycleNode
 {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(Flow)
@@ -40,18 +42,22 @@ public:
    * @brief Constructs a Flow object with a specified sequence of nodes.
    * @param nodes A vector of node names to initialize the flow sequence.
    */
-  explicit Flow(const std::vector<std::string> & nodes);
+  explicit Flow(const std::string & name);
+  Flow(const std::string & name, const std::vector<std::string> & nodes);
 
   /**
    * @brief Prints the sequence of nodes in the flow to the standard output.
    */
   void print() const;
-
   /**
    * @brief Retrieves the sequence of nodes in the flow.
    * @return A constant reference to the vector of node names.
    */
-  const std::vector<std::string> & get_nodes() const {return nodes_;}
+  const std::vector<std::string> & get_flow() const {return nodes_;}
+  void set_flow(const std::vector<std::string> & nodes);
+
+  void activate();
+  void deactivate();
 
 private:
   std::vector<std::string> nodes_; /**< Sequence of nodes in the flow. */

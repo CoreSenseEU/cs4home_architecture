@@ -21,9 +21,44 @@ namespace cs4home_core
  * @brief Constructs an Efferent object and assigns the parent lifecycle node.
  * @param parent Shared pointer to the lifecycle node managing this Efferent instance.
  */
-Efferent::Efferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-: parent_(parent)
+Efferent::Efferent(const std::string & name, rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
+: parent_(parent),
+  name_(name)
 {
+  // Declares the parameter for output topics.
+  parent_->declare_parameter(name_ + ".topics", output_topic_names_);
+  parent_->declare_parameter(name_ + ".types", output_topic_names_);
+}
+
+/**
+ * @brief Configures the Efferent by creating publishers for each specified topic.
+ *
+ * This method retrieves the topic names from the parameter server and attempts to create
+ * publishers for each topic to send messages.
+ *
+ * @return True if all publishers are created successfully.
+ */
+bool
+Efferent::configure()
+{
+  parent_->get_parameter(name_ + ".topics", output_topic_names_);
+  parent_->get_parameter(name_ + ".types", output_topic_types_);
+
+
+  for (size_t i = 0; i < output_topic_names_.size(); i++) {
+    if (create_publisher(output_topic_names_[i], output_topic_types_[i])) {
+      RCLCPP_DEBUG(
+        parent_->get_logger(),
+        "[SimpleImageOutput] created publisher to [%s, %s]",
+        output_topic_names_[i].c_str(), output_topic_types_[i].c_str());
+    } else {
+      RCLCPP_WARN(
+        parent_->get_logger(),
+        "[SimpleImageOutput] Couldn't create publisher to [%s, %s]",
+        output_topic_names_[i].c_str(), output_topic_types_[i].c_str());
+    }
+  }
+  return true;
 }
 
 /**

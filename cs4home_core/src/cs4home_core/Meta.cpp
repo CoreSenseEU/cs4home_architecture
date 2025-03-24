@@ -21,8 +21,9 @@ namespace cs4home_core
  * @brief Constructs a Meta object and assigns the parent lifecycle node.
  * @param parent Shared pointer to the lifecycle node managing this Meta instance.
  */
-Meta::Meta(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-: parent_(parent)
+Meta::Meta(const std::string & name, rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
+: parent_(parent),
+  name_(name)
 {
 }
 
