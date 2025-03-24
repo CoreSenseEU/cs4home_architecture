@@ -20,11 +20,6 @@
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-#include <tensorflow/lite/interpreter.h>
-#include <tensorflow/lite/interpreter_builder.h>
-#include <tensorflow/lite/kernels/register.h>
-#include <tensorflow/lite/model.h>
-
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 

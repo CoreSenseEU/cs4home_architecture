@@ -13,6 +13,7 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sound_msgs REQUIRED)
 find_package(audio_common_msgs REQUIRED)
+# find_package(tensorflow_ros_cpp REQUIRED)
 
 set(dependencies
   ament_cmake
@@ -22,6 +23,7 @@ set(dependencies
   cs4home_core
   sound_msgs
   audio_common_msgs
+  # tensorflow_ros_cpp
 )
 
 set(SOURCES
