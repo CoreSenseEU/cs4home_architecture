@@ -60,7 +60,7 @@ public:
    * @param msg shared pointer to the message to broadcast.
    */
   template <class MessageT>
-  void publish(size_t topic_index, std::unique_ptr<MessageT> msg) {
+  void publish(size_t topic_index, std::shared_ptr<MessageT> msg) {
     if (topic_index >= pubs_.size()) {
       RCLCPP_WARN(parent_->get_logger(),
                   "[Efferent] Error publishing: topic index not valid");

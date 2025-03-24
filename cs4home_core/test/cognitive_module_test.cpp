@@ -142,7 +142,7 @@ TEST(cognitive_module_test, afferent_on_subscription) {
   std::vector<std::string> topics{"/image"};
   std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
-  std::vector<std::unique_ptr<rclcpp::SerializedMessage>> images;
+  std::vector<std::shared_ptr<rclcpp::SerializedMessage>> images;
 
   // Load afferent component and verify successful loading
   auto [afferent, error_afferent] =
@@ -157,7 +157,7 @@ TEST(cognitive_module_test, afferent_on_subscription) {
   ASSERT_EQ(afferent->get_mode(), cs4home_core::Afferent::ONDEMAND);
 
   afferent->set_mode("/image", cs4home_core::Afferent::CALLBACK,
-                     [&images](std::unique_ptr<rclcpp::SerializedMessage> msg) {
+                     [&images](std::shared_ptr<rclcpp::SerializedMessage> msg) {
                        images.push_back(std::move(msg));
                      });
   ASSERT_TRUE(afferent->configure());
@@ -235,7 +235,7 @@ TEST(cognitive_module_test, efferent) {
   for (int i = 0; i < 10; i++) {
     auto msg = std::make_shared<sensor_msgs::msg::Image>();
     msg->header.frame_id = std::to_string(i);
-    efferent->publish(0, std::move(msg));
+    efferent->publish(0, msg);
     exe.spin_some();
   }
 

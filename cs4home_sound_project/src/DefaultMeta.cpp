@@ -15,28 +15,30 @@
 #include "cs4home_core/Meta.hpp"
 #include "cs4home_core/macros.hpp"
 
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/macros.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 /**
  * @class DefaultMeta
- * @brief A Meta component that provides default configurations for meta-level operations.
+ * @brief A Meta component that provides default configurations for meta-level
+ * operations.
  *
- * This class extends the Meta component, initializing with a basic configuration.
- * It is intended for meta-level tasks that require minimal setup.
+ * This class extends the Meta component, initializing with a basic
+ * configuration. It is intended for meta-level tasks that require minimal
+ * setup.
  */
-class DefaultMeta : public cs4home_core::Meta
-{
+class DefaultMeta : public cs4home_core::Meta {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(DefaultMeta)
 
   /**
-   * @brief Constructs a DefaultMeta object and initializes the parent lifecycle node.
-   * @param parent Shared pointer to the lifecycle node managing this DefaultMeta instance.
+   * @brief Constructs a DefaultMeta object and initializes the parent lifecycle
+   * node.
+   * @param parent Shared pointer to the lifecycle node managing this
+   * DefaultMeta instance.
    */
   explicit DefaultMeta(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-  : Meta(parent)
-  {
+      : Meta("meta", parent) {
     RCLCPP_DEBUG(parent_->get_logger(), "Meta created: [DefaultMeta]");
   }
 
@@ -47,8 +49,7 @@ public:
    *
    * @return True if configuration is successful.
    */
-  bool configure()
-  {
+  bool configure() {
     RCLCPP_DEBUG(parent_->get_logger(), "Meta configured");
     return true;
   }

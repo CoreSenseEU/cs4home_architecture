@@ -36,12 +36,8 @@ public:
    * AudioInput instance.
    */
   explicit AudioInput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-      : Afferent(parent) {
+      : Afferent("audio_input", parent) {
     RCLCPP_DEBUG(parent_->get_logger(), "Afferent created: [AudioInput]");
-
-    // Declares the parameter for input topics.
-    parent_->declare_parameter("audio_input.topics", input_topic_names_);
-    parent_->declare_parameter("audio_input.types", input_types_names_);
   }
 
   /**
@@ -54,38 +50,7 @@ public:
    *
    * @return True if all subscriptions are created successfully.
    */
-  bool configure() override {
-    std::string param_name_topics = "audio_input.topics";
-    std::string param_name_types = "audio_input.types";
-    parent_->get_parameter(param_name_topics, input_topic_names_);
-    parent_->get_parameter(param_name_types, input_types_names_);
-
-    RCLCPP_DEBUG(parent_->get_logger(),
-                 "[AudioInput] Configuring %zu inputs [%s]",
-                 input_topic_names_.size(), param_name_topics.c_str());
-    for (size_t i = 0; i < input_topic_names_.size(); i++) {
-      if (create_subscriber(input_topic_names_[i], input_types_names_[i])) {
-        RCLCPP_INFO(parent_->get_logger(),
-                    "[AudioInput] created subscription to [%s, "
-                    "%s]",
-                    input_topic_names_[i].c_str(),
-                    input_types_names_[i].c_str());
-      } else {
-        RCLCPP_WARN(parent_->get_logger(),
-                    "[AudioInput] Couldn't create subscription to [%s, "
-                    "%s]",
-                    input_topic_names_[i].c_str(),
-                    input_types_names_[i].c_str());
-      }
-    }
-
-    return true;
-  }
-
-private:
-  /**< List of input topics to subscribe to for audio information. */
-  std::vector<std::string> input_topic_names_;
-  std::vector<std::string> input_types_names_;
+  bool configure() override { return Afferent::configure(); }
 };
 
 /// Registers the AudioInput component with the ROS 2 class loader

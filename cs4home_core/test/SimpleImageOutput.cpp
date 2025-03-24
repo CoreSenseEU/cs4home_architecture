@@ -58,8 +58,8 @@ public:
    * @param msg shared pointer to an image message of type
    * `sensor_msgs::msg::Image`.
    */
-  void publish_image(sensor_msgs::msg::Image::UniquePtr msg) {
-    publish(0, std::move(msg));
+  void publish_image(sensor_msgs::msg::Image::SharedPtr msg) {
+    publish(0, msg);
   }
 };
 

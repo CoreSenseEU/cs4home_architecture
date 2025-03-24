@@ -44,7 +44,7 @@ Afferent::Afferent(const std::string &name,
  */
 void Afferent::set_mode(
     const std::string &topic, EfferentProcessMode mode,
-    std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb) {
+    std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)> cb) {
   if (mode == CALLBACK) {
     if (cb) {
       callbacks_[topic] = cb;
@@ -70,7 +70,7 @@ void Afferent::set_mode(
  */
 void Afferent::set_mode(
     size_t topic_idx, EfferentProcessMode mode,
-    std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)> cb) {
+    std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)> cb) {
   if (topic_idx >= input_topic_names_.size()) {
     RCLCPP_WARN(parent_->get_logger(),
                 "[Afferent] Error setting callback: topic index not valid");
@@ -104,29 +104,29 @@ void Afferent::set_mode(
  */
 bool Afferent::create_subscriber(const std::string &topic,
                                  const std::string &type) {
-  RCLCPP_DEBUG(parent_->get_logger(),
-               "[Afferent] Creating subscription [%s, %s]", topic.c_str(),
-               type.c_str());
+  RCLCPP_INFO(parent_->get_logger(),
+              "[Afferent] Creating subscription [%s, %s]", topic.c_str(),
+              type.c_str());
 
   if (msg_queues_.find(topic) == msg_queues_.end()) {
     msg_queues_[topic] =
-        std::queue<std::unique_ptr<rclcpp::SerializedMessage>>();
+        std::queue<std::shared_ptr<rclcpp::SerializedMessage>>();
   }
 
   auto sub = rclcpp::create_generic_subscription(
-      parent_->get_node_topics_interface(), topic, type, 100,
-      [&](std::unique_ptr<rclcpp::SerializedMessage> msg) {
+      parent_->get_node_topics_interface(), topic, type, rclcpp::QoS(100),
+      [&](std::shared_ptr<rclcpp::SerializedMessage> msg) {
         if (mode_ == CALLBACK) {
           if (callbacks_[topic]) {
-            callbacks_[topic](std::move(msg));
+            callbacks_[topic](msg);
           } else {
-            msg_queue_.push(std::move(msg));
-            if (msg_queue_.size() > max_queue_size_) {
-              msg_queue_.pop();
+            msg_queues_[topic].push(msg);
+            if (msg_queues_[topic].size() > max_queue_size_) {
+              msg_queues_[topic].pop();
             }
           }
         } else {
-          msg_queues_[topic].push(std::move(msg));
+          msg_queues_[topic].push(msg);
           if (msg_queues_[topic].size() > max_queue_size_) {
             msg_queues_[topic].pop();
           }

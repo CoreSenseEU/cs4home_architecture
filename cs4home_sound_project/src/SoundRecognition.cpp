@@ -16,6 +16,9 @@
 #include "cs4home_core/macros.hpp"
 
 #include "audio_common_msgs/msg/audio_data.hpp"
+#include "geometry_msgs/msg/pose_stamped.hpp"
+#include "sound_msgs/msg/sound_detection.hpp"
+#include "sound_msgs/msg/sound_event_detection.hpp"
 
 #include "rclcpp/macros.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
@@ -39,7 +42,7 @@ public:
    */
 
   explicit SoundRecognition(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-      : Core(parent) {
+      : Core("sound_recognition", parent) {
     RCLCPP_DEBUG(parent_->get_logger(), "Core created: [SoundRecognition]");
   }
 
@@ -73,12 +76,29 @@ public:
    * passed to `process_audio`.
    */
   void timer_callback() {
-    RCLCPP_INFO(parent_->get_logger(), "Audio will be processed");
-    auto msg = afferent_->get_msg<audio_common_msgs::msg::AudioData>();
-    if (msg != nullptr) {
-      process_audio(std::move(msg));
-      RCLCPP_INFO(parent_->get_logger(), "Audio processed");
+    // RCLCPP_INFO(parent_->get_logger(), "Audio will be processed");
+    auto msg_audio = afferent_->get_msg<audio_common_msgs::msg::AudioData>(0);
+    auto msg_doa = afferent_->get_msg<geometry_msgs::msg::PoseStamped>(7);
+    auto msg_sed = afferent_->get_msg<sound_msgs::msg::SoundEventDetection>(8);
+
+    // if (msg_audio != nullptr) {
+    //   RCLCPP_INFO(parent_->get_logger(), "Audio received");
+    // }
+    // if (msg_doa != nullptr) {
+    //   RCLCPP_INFO(parent_->get_logger(), "DOA received");
+    // }
+    // if (msg_sed != nullptr) {
+    //   RCLCPP_INFO(parent_->get_logger(), "Sound Event Detection received");
+    // }
+
+    if (msg_audio && msg_doa && msg_sed) {
+      RCLCPP_INFO(parent_->get_logger(), "Processing audio...");
+      // process_audio(msg_audio, msg_doa, msg_sed);
     }
+    //  if (msg != nullptr) {
+    //    process_audio(msg);
+    //    RCLCPP_INFO(parent_->get_logger(), "Audio processed");
+    //  }
   }
 
   /**

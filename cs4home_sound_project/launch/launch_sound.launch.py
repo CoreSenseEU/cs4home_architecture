@@ -40,7 +40,7 @@ def generate_launch_description():
         output='screen',
         parameters=[
             os.path.join(pkg_dir, 'config', 'params.yaml')
-        ])
+        ],)
 
     # Create the launch description and populate
     ld = LaunchDescription()

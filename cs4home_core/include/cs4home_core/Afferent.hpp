@@ -67,7 +67,7 @@ public:
    * CALLBACK mode.
    */
   void set_mode(const std::string &topic, EfferentProcessMode mode,
-                std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)>
+                std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)>
                     cb = nullptr);
 
   /**
@@ -79,7 +79,7 @@ public:
    * CALLBACK mode.
    */
   void set_mode(size_t topic_idx, EfferentProcessMode mode,
-                std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)>
+                std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)>
                     cb = nullptr);
 
   /**
@@ -124,17 +124,16 @@ public:
    * empty or does not exists.
    */
   template <class MessageT>
-  std::unique_ptr<MessageT> get_msg(const std::string &topic) {
+  std::shared_ptr<MessageT> get_msg(const std::string &topic) {
     if (msg_queues_.find(topic) == msg_queues_.end() ||
         msg_queues_[topic].empty()) {
       return nullptr;
     }
 
-    std::unique_ptr<rclcpp::SerializedMessage> msg =
-        std::move(msg_queues_[topic].front());
+    std::shared_ptr<rclcpp::SerializedMessage> msg = msg_queues_[topic].front();
     msg_queues_[topic].pop();
 
-    return get_msg<MessageT>(std::move(msg));
+    return get_msg<MessageT>(msg);
   }
 
   /**
@@ -146,7 +145,7 @@ public:
    * empty or does not exists.
    */
   template <class MessageT>
-  std::unique_ptr<MessageT> get_msg(size_t topic_idx) {
+  std::shared_ptr<MessageT> get_msg(size_t topic_idx) {
     if (topic_idx >= msg_queues_.size()) {
       return nullptr;
     }
@@ -158,11 +157,10 @@ public:
       return nullptr;
     }
 
-    std::unique_ptr<rclcpp::SerializedMessage> msg =
-        std::move(msg_queues_[topic].front());
+    std::shared_ptr<rclcpp::SerializedMessage> msg = msg_queues_[topic].front();
     msg_queues_[topic].pop();
 
-    return get_msg<MessageT>(std::move(msg));
+    return get_msg<MessageT>(msg);
   }
 
 protected:
@@ -180,7 +178,7 @@ protected:
   /** List of subscriptions. */
   std::vector<std::shared_ptr<rclcpp::GenericSubscription>> subs_;
   /** Queue for serialized messages. */
-  std::map<std::string, std::queue<std::unique_ptr<rclcpp::SerializedMessage>>>
+  std::map<std::string, std::queue<std::shared_ptr<rclcpp::SerializedMessage>>>
       msg_queues_;
   /**< List of input topics to subscribe to for images. */
   std::vector<std::string> input_topic_names_;
@@ -189,7 +187,7 @@ protected:
 
   /** Callback for serialized messages. */
   std::map<std::string,
-           std::function<void(std::unique_ptr<rclcpp::SerializedMessage>)>>
+           std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)>>
       callbacks_;
 
   /**

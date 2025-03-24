@@ -13,9 +13,7 @@ sound_recognition:
           "/audio/channel4",
           "/audio/channel5",
           "/doa",
-          "/doa_raw",
-          "/vad",
-          "/speech_audio",
+          "/sed",
         ]
       types:
         [
@@ -27,13 +25,11 @@ sound_recognition:
           "audio_common_msgs/msg/AudioData",
           "audio_common_msgs/msg/AudioData",
           "geometry_msgs/msg/PoseStamped",
-          "std_msgs/msg/Int32",
-          "std_msgs/msg/Bool",
-          "audio_common_msgs/msg/AudioData",
+          "sound_msgs/msg/SoundEventDetection",
         ]
     efferent: audio_output
     audio_output:
       topics: ["/sound_detections"]
       types: ["sound_msgs/msg/SoundDetection"]
-    meta: default_meta
-    coupling: default_coupling
+    meta: meta
+    coupling: coupling

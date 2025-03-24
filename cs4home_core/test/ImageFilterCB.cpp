@@ -63,14 +63,14 @@ public:
     counter = counter * 2;
     image_msg->header.frame_id = std::to_string(counter);
 
-    efferent_->publish(0, std::move(image_msg));
+    efferent_->publish(0, image_msg);
   }
 
   /**
    * @brief Processes incoming serialized camera info image messages. Do nothing
    * @param msg Unique pointer to the serialized incoming image message.
    */
-  void process_in_camerainfo(std::unique_ptr<rclcpp::SerializedMessage> msg) {
+  void process_in_camerainfo(std::shared_ptr<rclcpp::SerializedMessage> msg) {
     auto camerainfo_msgs =
         afferent_->get_msg<sensor_msgs::msg::Image>(std::move(msg));
     // Nothing to do

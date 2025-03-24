@@ -36,11 +36,8 @@ public:
    * AudioOutput instance.
    */
   explicit AudioOutput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-      : Efferent(parent) {
-    RCLCPP_DEBUG(parent_->get_logger(), "Afferent created: [AudioOutput]");
-
-    // Declares the parameter for output topics.
-    parent_->declare_parameter("audio_output.topics", output_topic_names_);
+      : Efferent("audio_output", parent) {
+    RCLCPP_INFO(parent_->get_logger(), "Afferent created: [AudioOutput]");
   }
 
   /**
@@ -53,25 +50,7 @@ public:
    *
    * @return True if all publishers are created successfully.
    */
-  bool configure() {
-    parent_->get_parameter("audio_output.topics", output_topic_names_);
-
-    for (size_t i = 0; i < output_topic_names_.size(); i++) {
-      if (create_publisher(output_topic_names_[i],
-                           "sound_msgs/msg/SoundDetection")) {
-        RCLCPP_INFO(parent_->get_logger(),
-                    "[AudioOutput] created publisher to [%s, "
-                    "sound_msgs/msg/SoundDetection]",
-                    output_topic_names_[i].c_str());
-      } else {
-        RCLCPP_WARN(parent_->get_logger(),
-                    "[AudioOutput] Couldn't create publisher to [%s, "
-                    "sound_msgs/msg/SoundDetection]",
-                    output_topic_names_[i].c_str());
-      }
-    }
-    return true;
-  }
+  bool configure() { return Efferent::configure(); }
 
   /**
    * @brief Publishes an sound recognition message to all configured topics.
@@ -80,12 +59,8 @@ public:
    */
   void publish_sound_detection(
       std::shared_ptr<sound_msgs::msg::SoundDetection> msg) {
-    publish(std::move(msg));
+    publish(0, msg);
   }
-
-private:
-  std::vector<std::string> output_topic_names_; /**< List of output topics to
-                                                   publish sound detection. */
 };
 
 /// Registers the AudioOutput component with the ROS 2 class loader
