@@ -21,27 +21,28 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 /**
- * @class AudioOutput
+ * @class SoundContextOutput
  * @brief Manages sound output by creating publishers for specified topics and
  *        providing a method to publish sound messages.
  */
-class AudioOutput : public cs4home_core::Efferent {
+class SoundContextOutput : public cs4home_core::Efferent {
 public:
-  RCLCPP_SMART_PTR_DEFINITIONS(AudioOutput)
+  RCLCPP_SMART_PTR_DEFINITIONS(SoundContextOutput)
 
   /**
-   * @brief Constructs a AudioOutput object and declares necessary
+   * @brief Constructs a SoundContextOutput object and declares necessary
    * parameters.
    * @param parent Shared pointer to the lifecycle node managing this
-   * AudioOutput instance.
+   * SoundContextOutput instance.
    */
-  explicit AudioOutput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-      : Efferent("audio_output", parent) {
-    RCLCPP_INFO(parent_->get_logger(), "Efferent created: [AudioOutput]");
+  explicit SoundContextOutput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
+      : Efferent("sound_context_output", parent) {
+    RCLCPP_INFO(parent_->get_logger(),
+                "Efferent created: [SoundContextOutput]");
   }
 
   /**
-   * @brief Configures the AudioOutput by creating publishers for each
+   * @brief Configures the SoundContextOutput by creating publishers for each
    * specified topic.
    *
    * This method retrieves the topic names from the parameter server and
@@ -53,5 +54,5 @@ public:
   bool configure() { return Efferent::configure(); }
 };
 
-/// Registers the AudioOutput component with the ROS 2 class loader
-CS_REGISTER_COMPONENT(AudioOutput)
+/// Registers the SoundContextOutput component with the ROS 2 class loader
+CS_REGISTER_COMPONENT(SoundContextOutput)

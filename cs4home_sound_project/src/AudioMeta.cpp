@@ -19,7 +19,7 @@
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
 /**
- * @class DefaultMeta
+ * @class AudioMeta
  * @brief A Meta component that provides default configurations for meta-level
  * operations.
  *
@@ -27,23 +27,23 @@
  * configuration. It is intended for meta-level tasks that require minimal
  * setup.
  */
-class DefaultMeta : public cs4home_core::Meta {
+class AudioMeta : public cs4home_core::Meta {
 public:
-  RCLCPP_SMART_PTR_DEFINITIONS(DefaultMeta)
+  RCLCPP_SMART_PTR_DEFINITIONS(AudioMeta)
 
   /**
-   * @brief Constructs a DefaultMeta object and initializes the parent lifecycle
+   * @brief Constructs a AudioMeta object and initializes the parent lifecycle
    * node.
    * @param parent Shared pointer to the lifecycle node managing this
-   * DefaultMeta instance.
+   * AudioMeta instance.
    */
-  explicit DefaultMeta(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
+  explicit AudioMeta(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
       : Meta("meta", parent) {
-    RCLCPP_DEBUG(parent_->get_logger(), "Meta created: [DefaultMeta]");
+    RCLCPP_DEBUG(parent_->get_logger(), "Meta created: [AudioMeta]");
   }
 
   /**
-   * @brief Configures the DefaultMeta component.
+   * @brief Configures the AudioMeta component.
    *
    * Logs the configuration step and prepares the component for operation.
    *
@@ -55,5 +55,5 @@ public:
   }
 };
 
-/// Registers the DefaultMeta component with the ROS 2 class loader
-CS_REGISTER_COMPONENT(DefaultMeta)
+/// Registers the AudioMeta component with the ROS 2 class loader
+CS_REGISTER_COMPONENT(AudioMeta)

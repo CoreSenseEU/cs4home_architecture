@@ -2,18 +2,18 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-class SoundModuleCognitive : public cs4home_core::CognitiveModule {
+class EmergencyModuleCognitive : public cs4home_core::CognitiveModule {
 public:
-  explicit SoundModuleCognitive(
+  explicit EmergencyModuleCognitive(
       const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
-      : cs4home_core::CognitiveModule("sound_module_cognitive", options) {
-    RCLCPP_INFO(this->get_logger(), "SoundModuleCognitive initialized");
+      : cs4home_core::CognitiveModule("emergency_module_cognitive", options) {
+    RCLCPP_INFO(this->get_logger(), "EmergencyModuleCognitive initialized");
   }
 };
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<SoundModuleCognitive>();
+  auto node = std::make_shared<EmergencyModuleCognitive>();
   rclcpp::spin(node->get_node_base_interface());
   rclcpp::shutdown();
   return 0;

@@ -29,7 +29,31 @@ sound_recognition:
         ]
     efferent: audio_output
     audio_output:
-      topics: ["/sound_detections"]
-      types: ["sound_msgs/msg/SoundDetection"]
-    meta: meta
-    coupling: coupling
+      topics: ["/sound_detection", "sound_markers"]
+      types: ["sound_msgs/msg/SoundDetection", "visualization_msgs/msg/Marker"]
+    meta: audio_meta
+    coupling: audio_coupling
+
+sound_supervision:
+  ros__parameters:
+    core: sound_supervision_bt
+
+sound_context_evaluation:
+  ros__parameters:
+    core: sound_context_evaluation
+    afferent: sound_input
+    sound_input:
+      topics: ["/yolo/detections", "/sound_detection"]
+      types: ["yolo_msgs/msg/DetectionArray", "sound_msgs/msg/SoundDetection"]
+    efferent: sound_context_output
+    sound_context_output:
+      topics: ["/sound_controlled"]
+      types: ["std_msgs/msg/Bool"]
+
+human_assistance:
+  ros__parameters:
+    core: human_assistance_bt
+
+emergency_action:
+  ros__parameters:
+    core: emergency_bt

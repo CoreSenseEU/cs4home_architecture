@@ -41,6 +41,46 @@ def generate_launch_description():
         parameters=[
             os.path.join(pkg_dir, 'config', 'params.yaml')
         ],)
+    
+    cm2_cmd = Node(
+        package='cs4home_sound_project',
+        executable='sound_supervision_cognitive_module',
+        name='sound_supervision',
+        namespace=namespace,
+        output='screen',
+        parameters=[
+            os.path.join(pkg_dir, 'config', 'params.yaml')
+        ],)
+    
+    cm3_cmd = Node(
+        package='cs4home_sound_project',
+        executable='sound_context_evaluation_cognitive_module',
+        name='sound_context_evaluation',
+        namespace=namespace,
+        output='screen',
+        parameters=[
+            os.path.join(pkg_dir, 'config', 'params.yaml')
+        ],)
+    
+    cm4_cmd = Node(
+        package='cs4home_sound_project',
+        executable='human_assistance_cognitive_module',
+        name='human_assistance',
+        namespace=namespace,
+        output='screen',
+        parameters=[
+            os.path.join(pkg_dir, 'config', 'params.yaml')
+        ],)
+    
+    cm5_cmd = Node(
+        package='cs4home_sound_project',
+        executable='emergency_cognitive_module',
+        name='emergency_action',
+        namespace=namespace,
+        output='screen',
+        parameters=[
+            os.path.join(pkg_dir, 'config', 'params.yaml')
+        ],)
 
     # Create the launch description and populate
     ld = LaunchDescription()
@@ -49,5 +89,9 @@ def generate_launch_description():
 
     # Declare the launch options
     ld.add_action(cm1_cmd)
+    ld.add_action(cm2_cmd)
+    ld.add_action(cm3_cmd)
+    ld.add_action(cm4_cmd)
+    ld.add_action(cm5_cmd)
 
     return ld

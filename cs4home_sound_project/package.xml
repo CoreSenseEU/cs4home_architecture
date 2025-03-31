@@ -4,7 +4,7 @@
   <name>cs4home_sound_project</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="fmrico@gmail.com">fmrico</maintainer>
+  <maintainer email="irene.gonzalezf@urjc.es">igonf</maintainer>
   <license>Apache License, Version 2.0</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
 
@@ -15,6 +15,7 @@
   <depend>sound_msgs</depend>
   <depend>audio_common_msgs</depend>
   <depend>geometry_msgs</depend>
+  <depend>yolo_msgs</depend>
   <depend>tf2</depend>
   <depend>tf2_ros</depend>
   <depend>tf2_geometry_msgs</depend>
