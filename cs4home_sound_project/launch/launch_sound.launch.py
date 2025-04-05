@@ -81,6 +81,16 @@ def generate_launch_description():
         parameters=[
             os.path.join(pkg_dir, 'config', 'params.yaml')
         ],)
+    
+    m_cmd = Node(
+        package='cs4home_sound_project',
+        executable='sound_master',
+        name='sound_master',
+        namespace=namespace,
+        output='screen',
+        parameters=[
+            os.path.join(pkg_dir, 'config', 'params.yaml')
+        ],)
 
     # Create the launch description and populate
     ld = LaunchDescription()
@@ -93,5 +103,6 @@ def generate_launch_description():
     ld.add_action(cm3_cmd)
     ld.add_action(cm4_cmd)
     ld.add_action(cm5_cmd)
+    #ld.add_action(m_cmd)
 
     return ld

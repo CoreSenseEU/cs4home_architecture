@@ -45,8 +45,7 @@ public:
    * specified topic.
    *
    * This method retrieves the topic names from the parameter server and
-   * attempts to create a subscription for each topic to receive
-   * `audio_common_msgs::msg::AudioData` messages.
+   * attempts to create a subscription for each topic.
    *
    * @return True if all subscriptions are created successfully.
    */

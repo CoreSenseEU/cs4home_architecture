@@ -78,9 +78,9 @@ public:
                       const std::string &sound_type) {
 
     std::unordered_map<std::string, RGBColor> sound_color_map = {
-        {"emergency", {1.0f, 0.0f, 0.0f}},   // Rojo
-        {"supervised", {1.0f, 0.5f, 0.0f}},  // Naranja
-        {"environment", {0.0f, 1.0f, 0.0f}}, // Verde
+        {"emergency", {1.0f, 0.0f, 0.0f}},   // Red
+        {"supervised", {1.0f, 0.5f, 0.0f}},  // Orange
+        {"environment", {0.0f, 1.0f, 0.0f}}, // Green
     };
 
     auto marker = visualization_msgs::msg::Marker();
@@ -117,8 +117,7 @@ public:
 
     marker.color.a = 0.7;
 
-    marker.lifetime =
-        rclcpp::Duration::from_seconds(0); // 0 significa que no desaparece
+    marker.lifetime = rclcpp::Duration::from_seconds(0);
 
     return std::make_shared<visualization_msgs::msg::Marker>(marker);
   }
@@ -143,7 +142,7 @@ public:
 
         double yaw = extract_yaw_from_pose(transform.transform.rotation);
 
-        // Calcular la diferencia angular entre el DOA y el micro
+        // Difference between DOA and mic
         double angle_diff = std::abs(yaw_source - yaw);
 
         if (angle_diff < closest_angle) {
@@ -158,7 +157,8 @@ public:
       }
     }
 
-    RCLCPP_INFO(parent_->get_logger(), "Nearest source: mic_%d",
+    RCLCPP_INFO(parent_->get_logger(),
+                "[SoundRecognition] Nearest source: mic_%d",
                 closest_microphone);
 
     auto now = parent_->get_clock()->now();
@@ -188,13 +188,12 @@ public:
         sound_location.header.stamp = parent_->get_clock()->now();
         sound_location.header.frame_id = "mic_array_link";
 
-        // Posición relativa al micrófono
         sound_location.pose.position.x = dx;
         sound_location.pose.position.y = dy;
         sound_location.pose.position.z = 0.0;
         sound_location.pose.orientation.w = 1.0;
 
-        // Transformar la posición del sonido de "mic_array_link" a "map"
+        // Transform position from mic_array_link to map
         geometry_msgs::msg::PoseStamped sound_location_in_map;
 
         tf2::doTransform(sound_location, sound_location_in_map,
@@ -202,12 +201,6 @@ public:
 
         efferent_->publish(1, create_sound_marker(sound_location_in_map, ""));
 
-        RCLCPP_INFO(parent_->get_logger(),
-                    "[SoundRecognition] Event detection: %s",
-                    sed_msg->class_name.c_str());
-
-        // Actualizar el mensaje de detección del sonido con la posición
-        // transformada
         auto sound_detection =
             std::make_shared<sound_msgs::msg::SoundDetection>();
 
@@ -216,21 +209,25 @@ public:
         sound_detection->class_name = sed_msg->class_name;
         sound_detection->class_id = sed_msg->class_id;
 
-        auto it = sound_type_map.find(sed_msg->class_name);
+        auto it = sound_type_map.find(sound_detection->class_name);
         if (it != sound_type_map.end()) {
           sound_detection->type = it->second;
         }
 
+        RCLCPP_INFO(parent_->get_logger(),
+                    "[SoundRecognition] Event detection: %s",
+                    sound_detection->class_name.c_str());
+
         // this->tf_broadcaster_->sendTransform(sound_source_transform);
-        RCLCPP_INFO(parent_->get_logger(), "[SoundRecognition] publish");
+        RCLCPP_INFO(parent_->get_logger(),
+                    "[SoundRecognition] Publish Efferent");
 
         efferent_->publish(0, sound_detection);
 
-        // Crear la transformación TF del sonido detectado
         geometry_msgs::msg::TransformStamped sound_source_transform;
         sound_source_transform.header.stamp = parent_->get_clock()->now();
         sound_source_transform.header.frame_id = "map";
-        sound_source_transform.child_frame_id = sed_msg->class_name;
+        sound_source_transform.child_frame_id = sound_detection->class_name;
 
         sound_source_transform.transform.translation.x =
             sound_location_in_map.pose.position.x;
@@ -242,7 +239,6 @@ public:
         sound_source_transform.transform.rotation =
             sound_location_in_map.pose.orientation;
 
-        // Publicar la transformación
         tf_broadcaster_->sendTransform(sound_source_transform);
 
         this->last_check_ = now;
@@ -280,13 +276,13 @@ public:
    */
   void timer_callback() {
     // RCLCPP_INFO(parent_->get_logger(), "Audio will be processed");
-    auto msg_audio = afferent_->get_msg<audio_common_msgs::msg::AudioData>(0);
+    // auto msg_audio =
+    // afferent_->get_msg<audio_common_msgs::msg::AudioData>(0);
     auto msg_doa = afferent_->get_msg<geometry_msgs::msg::PoseStamped>(7);
     auto msg_sed = afferent_->get_msg<sound_msgs::msg::SoundEventDetection>(8);
-    RCLCPP_INFO(parent_->get_logger(), "Callback");
 
     if (msg_doa && msg_sed) {
-      RCLCPP_INFO(parent_->get_logger(), "DOA y SED");
+      RCLCPP_DEBUG(parent_->get_logger(), "[SoundRecognition] Detections");
       process_audio_data(msg_doa, msg_sed);
     }
   }

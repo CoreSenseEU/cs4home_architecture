@@ -32,7 +32,7 @@ using namespace std::chrono_literals;
 
 /**
  * @class EmergencyBT
- * @brief Core component execute the audio supervision behaviour.
+ * @brief Core component execute the emergency action behaviour.
  */
 class EmergencyBT : public cs4home_core::Core {
 public:
@@ -64,6 +64,7 @@ public:
     factory_.registerFromPlugin(loader_.getOSName("attend_bt_node"));
     factory_.registerFromPlugin(loader_.getOSName("rotate_bt_node"));
     factory_.registerFromPlugin(loader_.getOSName("is_human_detected_bt_node"));
+    factory_.registerFromPlugin(loader_.getOSName("is_sound_detected_bt_node"));
 
     auto cascade_node =
         std::make_shared<rclcpp_cascade_lifecycle::CascadeLifecycleNode>(
@@ -80,9 +81,8 @@ public:
   }
 
   /**
-   * @brief Activates the SoundRecognition component by initializing a timer.
-   *
-   * The timer is set to call `timer_callback` every 50 milliseconds.
+   * @brief Activates the EmergencyBT component by initializing the behavior
+   * tree thread.
    *
    * @return True if activation is successful.
    */
@@ -92,11 +92,14 @@ public:
   }
 
   /**
-   * @brief Deactivates the SoundRecognition component by disabling the timer.
+   * @brief Deactivates the node and ensures proper shutdown of the behavior
+   * tree thread.
    *
-   * The timer is reset to null, stopping periodic message processing.
+   * It ensures that any running behavior tree thread is
+   * properly joined to avoid leaving background tasks running or causing race
+   * conditions.
    *
-   * @return True if deactivation is successful.
+   * @return True to indicate successful deactivation.
    */
   bool deactivate() override {
     if (bt_thread_.joinable()) {
@@ -121,6 +124,10 @@ private:
       finish = tree_.rootNode()->executeTick() != BT::NodeStatus::RUNNING;
       rate.sleep();
     }
+    RCLCPP_INFO(parent_->get_logger(),
+                "Behavior Tree finished, deactivating EmergencyBT.");
+    parent_->trigger_transition(
+        lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
   }
 };
 

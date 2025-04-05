@@ -80,9 +80,9 @@ public:
   }
 
   /**
-   * @brief Activates the SoundRecognition component by initializing a timer.
+   * @brief Activates the SoundRecognition component by initializing the
+   * behavior tree thread.
    *
-   * The timer is set to call `timer_callback` every 50 milliseconds.
    *
    * @return True if activation is successful.
    */
@@ -92,13 +92,21 @@ public:
   }
 
   /**
-   * @brief Deactivates the SoundRecognition component by disabling the timer.
+   * @brief Deactivates the node and ensures proper shutdown of the behavior
+   * tree thread.
    *
-   * The timer is reset to null, stopping periodic message processing.
+   * It ensures that any running behavior tree thread is
+   * properly joined to avoid leaving background tasks running or causing race
+   * conditions.
    *
-   * @return True if deactivation is successful.
+   * @return True to indicate successful deactivation.
    */
-  bool deactivate() override { return true; }
+  bool deactivate() override {
+    if (bt_thread_.joinable()) {
+      bt_thread_.join();
+    }
+    return true;
+  }
 
 private:
   BT::BehaviorTreeFactory factory_;
@@ -116,6 +124,11 @@ private:
       finish = tree_.rootNode()->executeTick() != BT::NodeStatus::RUNNING;
       rate.sleep();
     }
+
+    RCLCPP_INFO(parent_->get_logger(),
+                "Behavior Tree finished, deactivating SoundSupervisionBT.");
+    parent_->trigger_transition(
+        lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
   }
 };
 

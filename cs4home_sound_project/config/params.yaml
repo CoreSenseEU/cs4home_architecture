@@ -1,3 +1,7 @@
+sound_master:
+  ros__parameters:
+    flows: [flow_1]
+    flow_1: [sound_recognition, emergency_action]
 sound_recognition:
   ros__parameters:
     core: sound_recognition

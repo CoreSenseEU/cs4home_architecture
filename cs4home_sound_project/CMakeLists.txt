@@ -52,6 +52,7 @@ set(SOURCES
   src/${PROJECT_NAME}/SoundContextEvaluationCognitiveModule.cpp
   src/${PROJECT_NAME}/HumanAssistanceCognitiveModule.cpp
   src/${PROJECT_NAME}/EmergencyCognitiveModule.cpp
+  src/${PROJECT_NAME}/Master.cpp
 )
 
 install(DIRECTORY
@@ -142,11 +143,17 @@ target_link_libraries(human_assistance_cognitive_module human_assistance_bt)
 
 add_library(emergency_bt SHARED src/EmergencyBT.cpp)
 ament_target_dependencies(emergency_bt ${dependencies} ${test_dependencies})
-target_link_libraries(emergency_bt bt_nodes::attend_bt_node bt_nodes::is_human_detected_bt_node bt_nodes::rotate_bt_node)
+target_link_libraries(emergency_bt bt_nodes::attend_bt_node bt_nodes::is_human_detected_bt_node bt_nodes::rotate_bt_node bt_nodes::is_sound_detected_bt_node)
 
 add_executable(emergency_cognitive_module src/EmergencyCognitiveModule.cpp)
 ament_target_dependencies(emergency_cognitive_module ${dependencies})
 target_link_libraries(emergency_cognitive_module emergency_bt)
+
+# MASTER
+
+add_executable(sound_master src/Master.cpp)
+ament_target_dependencies(sound_master ${dependencies})
+target_link_libraries(sound_master)
 
 install(TARGETS
   sound_cognitive_module
@@ -165,6 +172,7 @@ install(TARGETS
   human_assistance_cognitive_module
   emergency_bt
   emergency_cognitive_module
+  sound_master
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   DESTINATION lib/${PROJECT_NAME}
@@ -176,6 +184,7 @@ install(TARGETS
   sound_context_evaluation_cognitive_module
   human_assistance_cognitive_module
   emergency_cognitive_module
+  sound_master
   DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -22,8 +22,8 @@
 
 /**
  * @class SoundInput
- * @brief Manages audio input by creating subscribers for specified topics and
- *        handling audio messages from these sources.
+ * @brief Manages sound detection input by creating subscribers for specified
+ * topics and handling audio messages from these sources.
  */
 class SoundInput : public cs4home_core::Afferent {
 public:
@@ -45,8 +45,7 @@ public:
    * specified topic.
    *
    * This method retrieves the topic names from the parameter server and
-   * attempts to create a subscription for each topic to receive
-   * `audio_common_msgs::msg::AudioData` messages.
+   * attempts to create a subscription for each topic.
    *
    * @return True if all subscriptions are created successfully.
    */

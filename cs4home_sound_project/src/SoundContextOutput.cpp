@@ -22,8 +22,8 @@
 
 /**
  * @class SoundContextOutput
- * @brief Manages sound output by creating publishers for specified topics and
- *        providing a method to publish sound messages.
+ * @brief Manages sound context output by creating publishers for specified
+ * topics and providing a method to publish sound messages.
  */
 class SoundContextOutput : public cs4home_core::Efferent {
 public:
@@ -46,8 +46,7 @@ public:
    * specified topic.
    *
    * This method retrieves the topic names from the parameter server and
-   * attempts to create a publisher for each topic to publish
-   * `sound_msgs::msg::SoundDetection` messages.
+   * attempts to create a publisher for each topic.
    *
    * @return True if all publishers are created successfully.
    */

@@ -55,12 +55,12 @@ public:
   }
 
   /**
-   * @brief Timer callback function that retrieves an audio message and
+   * @brief Timer callback function that retrieves an sound detection and
    * processes it.
    *
-   * This function is called periodically and attempts to retrieve an audio
-   * message from the afferent component. If a message is received, it is
-   * passed to `process_audio`.
+   * This function is called periodically and attempts to retrieve an sound
+   * detection message from the afferent component. If a message is received, it
+   * evaluate the context of the situation.
    */
   void timer_callback() {
 
@@ -91,6 +91,10 @@ public:
       }
 
       efferent_->publish(0, controlled_sound);
+      RCLCPP_INFO(parent_->get_logger(),
+                  "Deactivating SoundContextEvaluation.");
+      parent_->trigger_transition(
+          lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
     } else {
       RCLCPP_WARN(parent_->get_logger(),
                   "[SoundContextEvaluation] No detections");
