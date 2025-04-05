@@ -29,7 +29,9 @@ ros2 launch cs4home_sound_project launch_sound.launch.py
 
 If needed, you can use the RB1 robot simulation:
 
+```bash
 git clone -b mic-array-urdf https://github.com/igonzf/ros2_rb1.git
+```
 
 ## Creating a Cognitive Module
 
@@ -39,7 +41,7 @@ Each cognitive module is defined through configuration and implemented using the
 
 Edit the file:
 
-cs4home_sound_project/config/params.yaml
+`cs4home_sound_project/config/params.yaml`
 
 Example:
 
