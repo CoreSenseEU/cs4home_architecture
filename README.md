@@ -14,16 +14,91 @@ This structure addresses traditional challenges in robotics, such as hardware-bu
 
 This model is designed as an adaptable solution for a wide variety of robotic systems based on ROS 2, from low-level controls to complex inter-robot coordination and communication. This adaptability allows the scaling and distribution of components across diverse architectures, facilitating the incorporation of new functionalities without the need for redesign.
 
+## Installation
 
-## Examples
+```bash
+cd ~/ros2_ws/src
+git clone -b humble https://github.com/igonzf/cs4home_architecture.git
+vcs import --recursive < cs4home_architecture/CoreSense4Home/robocup_bringup/thirdparty.repos
+cd ~/ros2_ws
+colcon build --symlink-install
+ros2 launch cs4home_sound_project launch_sound.launch.py
+```
 
+## Simulator
 
-Implementation of the architecture from the Social Testbed point of view
+If needed, you can use the RB1 robot simulation:
 
+git clone -b mic-array-urdf https://github.com/igonzf/ros2_rb1.git
 
+## Creating a Cognitive Module
 
+Each cognitive module is defined through configuration and implemented using the base classes provided by the architecture.
 
-## status
+### 1. Define the module in YAML
 
-[![rolling](https://github.com/CoreSenseEU/cs4home_architecture/actions/workflows/rolling.yaml/badge.svg)](https://github.com/CoreSenseEU/cs4home_architecture/actions/workflows/rolling.yaml)
+Edit the file:
 
+cs4home_sound_project/config/params.yaml
+
+Example:
+
+```yaml
+sound_recognition:
+  ros_parameters:
+    core: sound_context_evaluation
+    afferent: sound_input
+    sound_input:
+      topics: ["/audio", "/doa"]
+      types:
+        ["audio_common_msgs/msg/AudioData", "geometry_msgs/msg/PoseStamped"]
+    efferent: sound_context_output
+    sound_context_output:
+      topics: ["/sound_context", "/context_markers"]
+      types: ["sound_msgs/msg/SoundContext", "visualization_msgs/msg/Marker"]
+    meta: sound_meta
+    coupling: sound_coupling
+```
+
+Fields:
+
+- `core`: name of the main processing node
+- `afferent`: input handler (subscribes to topics)
+- `efferent`: output handler (publishes results)
+- `meta`: module metadata manager
+- `coupling`: logic that connects with other modules
+
+### 2. Implement the Module
+
+Create a class that inherits from cs4home_core::CognitiveModule:
+
+```cpp
+class SoundModuleCognitive : public cs4home_core::CognitiveModule {
+// Instantiate lifecycle components here
+};
+```
+
+Define each component as a subclass:
+
+```cpp
+class AudioInput : public cs4home_core::Afferent {};
+class AudioOutput : public cs4home_core::Efferent {};
+class DefaultCoupling : public cs4home_core::Coupling {};
+class AudioMeta : public cs4home_core::Meta {};
+
+class SoundRecognition : public cs4home*core::Core {
+void process() override {
+    // Access afferent input by index
+    auto msg_audio = afferent*->get_msg<audio_common_msgs::msg::AudioData>(0);
+
+    // Or by topic name
+    auto msg_doa = afferent_->get_msg<geometry_msgs::msg::PoseStamped>("/doa");
+
+    // Publish processed result
+    efferent_->publish(0, sound);
+
+}
+};
+```
+
+Each component is managed as a ROS 2 Lifecycle Node and instantiated according to the YAML configuration.
