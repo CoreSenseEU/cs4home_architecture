@@ -1,0 +1,21 @@
+<map id="cs4home_core/include/cs4home_core/Core.hpp" name="cs4home_core/include/cs4home_core/Core.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="674,5,839,46"/>
+<area shape="rect" id="Node000002" href="$CognitiveModule_8hpp.html" title=" " alt="" coords="292,94,526,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="663,53,488,96,487,91,662,48"/>
+<area shape="rect" id="Node000008" href="$Core_8cpp.html" title=" " alt="" coords="549,94,735,135"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="720,58,670,96,666,91,717,53"/>
+<area shape="rect" id="Node000009" href="$ImageFilter_8cpp.html" title=" " alt="" coords="759,102,984,127"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="796,53,857,99,854,103,793,57"/>
+<area shape="rect" id="Node000010" href="$ImageFilterCB_8cpp.html" title=" " alt="" coords="1008,94,1209,135"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="852,48,1029,91,1028,96,851,53"/>
+<area shape="rect" id="Node000003" href="$Master_8hpp.html" title=" " alt="" coords="9,183,187,223"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="324,142,169,185,168,180,322,137"/>
+<area shape="rect" id="Node000005" href="$CognitiveModule_8cpp.html" title=" " alt="" coords="211,183,396,223"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="375,147,329,184,325,180,371,143"/>
+<area shape="rect" id="Node000006" href="$cognitive__module__test_8cpp.html" title=" " alt="" coords="420,183,608,223"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="446,143,492,180,489,184,442,147"/>
+<area shape="rect" id="Node000007" href="$master__test_8cpp.html" title=" " alt="" coords="632,183,809,223"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="495,137,650,180,649,185,494,142"/>
+<area shape="rect" id="Node000004" href="$Master_8cpp.html" title=" " alt="" coords="5,271,191,312"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="101,239,101,271,95,271,95,239"/>
+</map>

@@ -1,0 +1,29 @@
+<map id="cs4home_core/include/cs4home_core/Afferent.hpp" name="cs4home_core/include/cs4home_core/Afferent.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="429,5,612,46"/>
+<area shape="rect" id="Node000002" href="$CognitiveModule_8hpp.html" title=" " alt="" coords="193,183,427,223"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="480,57,428,96,331,184,328,180,424,92,477,53"/>
+<area shape="rect" id="Node000006" href="$cognitive__module__test_8cpp.html" title=" " alt="" coords="5,271,194,312"/>
+<area shape="poly" id="edge14_Node000001_Node000006" title=" " alt="" coords="441,54,381,76,314,105,245,141,183,185,160,206,141,229,112,272,108,269,137,226,157,202,179,181,243,137,311,100,379,71,439,49"/>
+<area shape="rect" id="Node000008" href="$Core_8hpp.html" title=" " alt="" coords="438,94,604,135"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="524,62,524,94,518,94,518,62"/>
+<area shape="rect" id="Node000012" href="$Afferent_8cpp.html" title=" " alt="" coords="628,94,814,135"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="581,50,676,91,674,96,579,55"/>
+<area shape="rect" id="Node000013" href="$SimpleImageInput_8cpp.html" title=" " alt="" coords="838,94,1014,135"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="628,47,838,92,837,97,627,52"/>
+<area shape="rect" id="Node000003" href="$Master_8hpp.html" title=" " alt="" coords="628,271,806,312"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="418,225,628,269,627,274,417,230"/>
+<area shape="rect" id="Node000005" href="$CognitiveModule_8cpp.html" title=" " alt="" coords="218,271,403,312"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="313,239,313,271,308,271,308,239"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="250,232,148,273,146,268,248,227"/>
+<area shape="rect" id="Node000007" href="$master__test_8cpp.html" title=" " alt="" coords="427,271,604,312"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="372,227,470,268,468,273,370,232"/>
+<area shape="rect" id="Node000004" href="$Master_8cpp.html" title=" " alt="" coords="624,360,810,401"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="720,328,720,360,714,360,714,328"/>
+<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="460,143,359,185,357,180,458,138"/>
+<area shape="rect" id="Node000009" href="$Core_8cpp.html" title=" " alt="" coords="676,183,862,223"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="592,138,713,180,711,185,590,143"/>
+<area shape="rect" id="Node000010" href="$ImageFilter_8cpp.html" title=" " alt="" coords="886,190,1111,216"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="619,132,927,187,926,192,618,138"/>
+<area shape="rect" id="Node000011" href="$ImageFilterCB_8cpp.html" title=" " alt="" coords="451,183,652,223"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="535,149,547,181,542,183,530,150"/>
+</map>

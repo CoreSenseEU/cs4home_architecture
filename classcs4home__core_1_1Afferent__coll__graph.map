@@ -1,0 +1,17 @@
+<map id="Afferent" name="Afferent">
+<area shape="rect" id="Node000001" title="Manages afferent processing in robotic nodes, including message handling, subscriptions,..." alt="" coords="476,188,542,213"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="83,24,162,49"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="177,24,239,18,311,20,349,25,386,34,421,48,453,68,478,95,495,128,504,161,509,187,504,188,499,162,490,130,474,98,450,72,418,53,384,39,348,30,311,25,239,24,178,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,74,240,114"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="256,86,304,90,355,99,406,112,453,133,483,158,503,186,498,189,479,162,450,138,404,117,354,104,304,96,255,92"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="50,138,195,164"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="211,150,326,159,452,178,476,185,475,190,451,183,326,164,210,156"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="77,188,168,213"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="183,198,475,198,475,203,183,203"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="95,237,150,263"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="165,247,294,241,373,232,451,218,475,211,476,216,452,224,374,237,294,246,166,252"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="9,287,236,328"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="251,310,301,306,352,298,403,284,450,264,479,239,498,212,503,215,483,243,453,269,405,290,353,303,301,312,251,315"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="43,351,202,407"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="218,386,275,385,336,378,396,360,424,346,450,330,474,303,489,271,499,239,503,213,509,214,504,240,494,273,478,306,453,334,427,351,398,365,337,383,275,391,218,392"/>
+</map>

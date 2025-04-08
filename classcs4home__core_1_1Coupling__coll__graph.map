@@ -1,0 +1,5 @@
+<map id="Coupling" name="Coupling">
+<area shape="rect" id="Node000001" title="Manages coupling operations within a robotic system, providing lifecycle&#45;aware configuration." alt="" coords="9,94,81,120"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,85,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="48,47,48,94,42,94,42,47"/>
+</map>

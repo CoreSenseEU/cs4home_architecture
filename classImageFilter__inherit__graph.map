@@ -1,0 +1,5 @@
+<map id="ImageFilter" name="ImageFilter">
+<area shape="rect" id="Node000001" title="Core component that filters incoming image messages by modifying their headers and republishing them ..." alt="" coords="5,79,92,105"/>
+<area shape="rect" id="Node000002" href="$classcs4home__core_1_1Core.html" title="Manages core functionality for a robotic component, including lifecycle transitions and connections t..." alt="" coords="24,5,73,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="51,46,51,79,46,79,46,46"/>
+</map>

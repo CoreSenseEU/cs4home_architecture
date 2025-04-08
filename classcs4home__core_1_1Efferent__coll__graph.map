@@ -1,0 +1,7 @@
+<map id="Efferent" name="Efferent">
+<area shape="rect" id="Node000001" title="Manages efferent operations in the robotic system, including the configuration of publishers and mess..." alt="" coords="98,109,163,135"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,13,85,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,48,121,107,117,110,64,52"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="109,5,325,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,59,143,111,139,107,187,55"/>
+</map>

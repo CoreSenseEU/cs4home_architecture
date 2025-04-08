@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classcs4home__core_1_1Coupling.html" title="Manages coupling operations within a robotic system, providing lifecycle&#45;aware configuration." alt="" coords="5,5,77,31"/>
+<area shape="rect" id="Node000001" href="$classDefaultCoupling.html" title="A Coupling component that provides default configuration for coupling&#45;related tasks." alt="" coords="125,5,237,31"/>
+<area shape="poly" id="edge4_Node000000_Node000001" title=" " alt="" coords="92,16,124,16,124,21,92,21"/>
+</map>

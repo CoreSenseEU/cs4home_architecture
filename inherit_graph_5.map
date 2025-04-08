@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,110,56"/>
+<area shape="rect" id="Node000001" href="$classcs4home__core_1_1CognitiveModule.html" title="Extends the LifecycleNode to manage cognitive processing components in a ROS 2 lifecycle,..." alt="" coords="158,5,275,31"/>
+<area shape="poly" id="edge6_Node000000_Node000001" title=" " alt="" coords="124,30,157,25,158,30,125,35"/>
+<area shape="rect" id="Node000002" href="$classcs4home__core_1_1Master.html" title="Represents the master node that manages multiple cognitive modules within a ROS 2 lifecycle&#45;based rob..." alt="" coords="186,55,247,80"/>
+<area shape="poly" id="edge7_Node000000_Node000002" title=" " alt="" coords="125,51,186,60,185,66,125,56"/>
+</map>

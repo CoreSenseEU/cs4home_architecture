@@ -1,0 +1,7 @@
+<map id="DefaultCoupling" name="DefaultCoupling">
+<area shape="rect" id="Node000001" title="A Coupling component that provides default configuration for coupling&#45;related tasks." alt="" coords="5,169,118,195"/>
+<area shape="rect" id="Node000002" href="$classcs4home__core_1_1Coupling.html" title="Manages coupling operations within a robotic system, providing lifecycle&#45;aware configuration." alt="" coords="26,94,97,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,135,64,169,59,169,59,135"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="22,5,101,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="64,47,64,94,59,94,59,47"/>
+</map>

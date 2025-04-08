@@ -1,0 +1,7 @@
+<map id="Master" name="Master">
+<area shape="rect" id="Node000001" title="Represents the master node that manages multiple cognitive modules within a ROS 2 lifecycle&#45;based rob..." alt="" coords="108,124,170,150"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,20,110,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,56,131,122,127,125,74,60"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="134,5,307,61"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,75,151,125,147,122,187,72"/>
+</map>

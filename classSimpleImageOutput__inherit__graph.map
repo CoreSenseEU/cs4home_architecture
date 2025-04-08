@@ -1,0 +1,5 @@
+<map id="SimpleImageOutput" name="SimpleImageOutput">
+<area shape="rect" id="Node000001" title="Manages image output by creating publishers for specified topics and providing a method to publish im..." alt="" coords="5,79,142,105"/>
+<area shape="rect" id="Node000002" href="$classcs4home__core_1_1Efferent.html" title="Manages efferent operations in the robotic system, including the configuration of publishers and mess..." alt="" coords="41,5,106,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,46,76,79,71,79,71,46"/>
+</map>

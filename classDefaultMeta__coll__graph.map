@@ -1,0 +1,7 @@
+<map id="DefaultMeta" name="DefaultMeta">
+<area shape="rect" id="Node000001" title="A Meta component that provides default configurations for meta&#45;level operations." alt="" coords="5,169,97,195"/>
+<area shape="rect" id="Node000002" href="$classcs4home__core_1_1Meta.html" title="Provides a meta&#45;component for managing additional lifecycle functions within a robotic system,..." alt="" coords="26,94,76,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="54,135,54,169,48,169,48,135"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="11,5,91,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="54,47,54,94,48,94,48,47"/>
+</map>
