@@ -25,7 +25,7 @@ namespace cs4home_core
 CognitiveModule::CognitiveModule(
   const std::string & name,
   const rclcpp::NodeOptions & options)
-: LifecycleNode(name, options)
+: CascadeLifecycleNode(name, options)
 {
   declare_parameter("core", core_name_);
   declare_parameter("afferent", afferent_name_);
@@ -78,10 +78,8 @@ CallbackReturnT CognitiveModule::on_configure(const rclcpp_lifecycle::State & st
     return CallbackReturnT::FAILURE;
   }
 
-
   core_->set_afferent(afferent_);
   core_->set_efferent(efferent_);
-
 
   get_parameter("meta", meta_name_);
   std::string error_meta;

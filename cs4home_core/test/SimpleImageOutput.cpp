@@ -35,12 +35,9 @@ public:
    * @param parent Shared pointer to the lifecycle node managing this SimpleImageOutput instance.
    */
   explicit SimpleImageOutput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-  : Efferent(parent)
+  : Efferent("simple_image_output", parent)
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Afferent created: [SimpleImageOutput]");
-
-    // Declares the parameter for output topics.
-    parent_->declare_parameter("simple_image_output.topics", output_topic_names_);
   }
 
   /**
@@ -53,22 +50,7 @@ public:
    */
   bool configure()
   {
-    parent_->get_parameter("simple_image_output.topics", output_topic_names_);
-
-    for (size_t i = 0; i < output_topic_names_.size(); i++) {
-      if (create_publisher(output_topic_names_[i], "sensor_msgs/msg/Image")) {
-        RCLCPP_DEBUG(
-          parent_->get_logger(),
-          "[SimpleImageOutput] created publisher to [%s, sensor_msgs/msg/Image]",
-          output_topic_names_[i].c_str());
-      } else {
-        RCLCPP_WARN(
-          parent_->get_logger(),
-          "[SimpleImageOutput] Couldn't create publisher to [%s, sensor_msgs/msg/Image]",
-          output_topic_names_[i].c_str());
-      }
-    }
-    return true;
+    return Efferent::configure();
   }
 
   /**
@@ -77,11 +59,8 @@ public:
    */
   void publish_image(sensor_msgs::msg::Image::UniquePtr msg)
   {
-    publish(std::move(msg));
+    publish(0, std::move(msg));
   }
-
-private:
-  std::vector<std::string> output_topic_names_; /**< List of output topics to publish images. */
 };
 
 /// Registers the SimpleImageOutput component with the ROS 2 class loader

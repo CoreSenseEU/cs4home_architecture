@@ -35,7 +35,7 @@ public:
    * @param parent Shared pointer to the lifecycle node managing this DefaultCoupling instance.
    */
   explicit DefaultCoupling(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-  : Coupling(parent)
+  : Coupling("default_coupling", parent)
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Coupling created: [DefaultCoupling]");
   }

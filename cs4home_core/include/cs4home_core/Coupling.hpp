@@ -15,6 +15,8 @@
 #ifndef CS4HOME_CORE__COUPLING_HPP_
 #define CS4HOME_CORE__COUPLING_HPP_
 
+#include <string>
+
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/macros.hpp"
 
@@ -35,7 +37,8 @@ public:
    * @brief Constructs a Coupling object associated with a parent lifecycle node.
    * @param parent Shared pointer to the lifecycle node managing this Coupling instance.
    */
-  explicit Coupling(rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
+  explicit Coupling(
+    const std::string & name, rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
 
   /**
    * @brief Configures the Coupling component.
@@ -46,6 +49,7 @@ public:
 protected:
   /**< Shared pointer to the parent lifecycle node. */
   rclcpp_lifecycle::LifecycleNode::SharedPtr parent_;
+  std::string name_;
 };
 
 }  // namespace cs4home_core
