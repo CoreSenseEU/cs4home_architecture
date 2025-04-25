@@ -13,3 +13,21 @@ This structure addresses traditional challenges in robotics, such as hardware-bu
 - Integration of functional entities via ROS 2 technologies: The proposal incorporates ROS 2's publish-subscribe, service, and action techniques for distributed integration of functional entities, facilitating dynamic and adaptable component connections.
 
 This model is designed as an adaptable solution for a wide variety of robotic systems based on ROS 2, from low-level controls to complex inter-robot coordination and communication. This adaptability allows the scaling and distribution of components across diverse architectures, facilitating the incorporation of new functionalities without the need for redesign.
+
+## Documentation
+
+* Doxygen:[https://coresenseeu.github.io/cs4home_architecture/](https://coresenseeu.github.io/cs4home_architecture/)
+* General documentation: [https://coresenseeu.github.io/](https://coresenseeu.github.io/)
+
+## Examples
+
+
+Implementation of the architecture from the Social Testbed point of view
+
+
+
+
+## status
+
+[![rolling](https://github.com/CoreSenseEU/cs4home_architecture/actions/workflows/rolling.yaml/badge.svg)](https://github.com/CoreSenseEU/cs4home_architecture/actions/workflows/rolling.yaml)
+
