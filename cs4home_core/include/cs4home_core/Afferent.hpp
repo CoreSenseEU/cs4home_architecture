@@ -39,10 +39,10 @@ public:
   RCLCPP_SMART_PTR_DEFINITIONS(Afferent)
 
   /**
-   * @enum EfferentProcessMode
+   * @enum AfferentProcessMode
    * @brief Defines processing modes for serialized message handling.
    */
-  enum EfferentProcessMode { CALLBACK, ONDEMAND };
+  enum AfferentProcessMode { CALLBACK, ONDEMAND };
 
   /**
    * @brief Constructor for the Afferent class.
@@ -66,7 +66,7 @@ public:
    * @param cb Optional callback function for handling serialized messages in
    * CALLBACK mode.
    */
-  void set_mode(const std::string &topic, EfferentProcessMode mode,
+  void set_mode(const std::string &topic, AfferentProcessMode mode,
                 std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)>
                     cb = nullptr);
 
@@ -78,15 +78,15 @@ public:
    * @param cb Optional callback function for handling serialized messages in
    * CALLBACK mode.
    */
-  void set_mode(size_t topic_idx, EfferentProcessMode mode,
+  void set_mode(size_t topic_idx, AfferentProcessMode mode,
                 std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)>
                     cb = nullptr);
 
   /**
    * @brief Gets the current processing mode.
-   * @return The current EfferentProcessMode.
+   * @return The current AfferentProcessMode.
    */
-  EfferentProcessMode get_mode() { return mode_; }
+  AfferentProcessMode get_mode() { return mode_; }
 
   /**
    * @brief Sets the maximum queue size for storing messages.
@@ -168,7 +168,7 @@ protected:
   rclcpp_lifecycle::LifecycleNode::SharedPtr parent_;
   std::string name_;
 
-  EfferentProcessMode mode_{ONDEMAND}; /**< Current processing mode. */
+  AfferentProcessMode mode_{ONDEMAND}; /**< Current processing mode. */
 
   /** Default maximum queue size. */
   const size_t MAX_DEFAULT_QUEUE_SIZE = 100;

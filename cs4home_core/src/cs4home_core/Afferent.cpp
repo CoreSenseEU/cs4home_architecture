@@ -43,7 +43,7 @@ Afferent::Afferent(const std::string &name,
  * mode is CALLBACK.
  */
 void Afferent::set_mode(
-    const std::string &topic, EfferentProcessMode mode,
+    const std::string &topic, AfferentProcessMode mode,
     std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)> cb) {
   if (mode == CALLBACK) {
     if (cb) {
@@ -69,7 +69,7 @@ void Afferent::set_mode(
  * mode is CALLBACK.
  */
 void Afferent::set_mode(
-    size_t topic_idx, EfferentProcessMode mode,
+    size_t topic_idx, AfferentProcessMode mode,
     std::function<void(std::shared_ptr<rclcpp::SerializedMessage>)> cb) {
   if (topic_idx >= input_topic_names_.size()) {
     RCLCPP_WARN(parent_->get_logger(),
