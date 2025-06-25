@@ -40,7 +40,14 @@ public:
 
   /**
    * @enum AfferentProcessMode
-   * @brief Defines processing modes for serialized message handling.
+   * @brief Defines processing modes for handling incoming serialized messages
+   * in an Afferent component.
+   *
+   * - CALLBACK: Incoming messages are processed immediately upon arrival via a
+   * callback function.
+   *
+   * - ONDEMAND: Incoming messages are queued and accessed explicitly through a
+   * `get_msg()` function, allowing controlled and deferred processing.
    */
   enum AfferentProcessMode { CALLBACK, ONDEMAND };
 
