@@ -35,51 +35,19 @@ public:
    * @param parent Shared pointer to the lifecycle node managing this SimpleImageInput instance.
    */
   explicit SimpleImageInput(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-  : Afferent(parent)
+  : Afferent("simple_image_input", parent)
   {
     RCLCPP_DEBUG(parent_->get_logger(), "Efferent created: [SimpleImageInput]");
-
-    // Declares the parameter for input topics.
-    parent_->declare_parameter("simple_image_input.topics", input_topic_names_);
   }
 
   /**
    * @brief Configures the SimpleImageInput by creating subscribers for each specified topic.
-   *
-   * This method retrieves the topic names from the parameter server and attempts to create
-   * a subscription for each topic to receive `sensor_msgs::msg::Image` messages.
-   *
    * @return True if all subscriptions are created successfully.
    */
   bool configure() override
   {
-    std::string param_name = "simple_image_input.topics";
-    parent_->get_parameter(param_name, input_topic_names_);
-
-    RCLCPP_DEBUG(
-      parent_->get_logger(), "[SimpleImageInput] Configuring %zu inputs [%s]",
-      input_topic_names_.size(), param_name.c_str());
-
-    for (size_t i = 0; i < input_topic_names_.size(); i++) {
-      if (create_subscriber(input_topic_names_[i], "sensor_msgs/msg/Image")) {
-        RCLCPP_DEBUG(
-          parent_->get_logger(),
-          "[SimpleImageInput] created subscription to [%s, sensor_msgs/msg/Image]",
-          input_topic_names_[i].c_str());
-      } else {
-        RCLCPP_WARN(
-          parent_->get_logger(),
-          "[SimpleImageInput] Couldn't create subscription to [%s, sensor_msgs/msg/Image]",
-          input_topic_names_[i].c_str());
-      }
-    }
-
-    return true;
+    return Afferent::configure();
   }
-
-private:
-  /**< List of input topics to subscribe to for images. */
-  std::vector<std::string> input_topic_names_;
 };
 
 /// Registers the SimpleImageInput component with the ROS 2 class loader

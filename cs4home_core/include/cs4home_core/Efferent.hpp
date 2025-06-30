@@ -19,34 +19,36 @@
 #include <string>
 #include <vector>
 
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/macros.hpp"
 #include "rclcpp/serialization.hpp"
+#include "rclcpp_lifecycle/lifecycle_node.hpp"
 
-namespace cs4home_core
-{
+namespace cs4home_core {
 
 /**
  * @class Efferent
- * @brief Manages efferent operations in the robotic system, including the configuration
- *        of publishers and message broadcasting.
+ * @brief Manages efferent operations in the robotic system, including the
+ * configuration of publishers and message broadcasting.
  */
-class Efferent
-{
+class Efferent {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(Efferent)
 
   /**
-   * @brief Constructs an Efferent object associated with a parent lifecycle node.
-   * @param parent Shared pointer to the lifecycle node managing this Efferent instance.
+   * @brief Constructs an Efferent object associated with a parent lifecycle
+   * node.
+   * @param name name of the component.
+   * @param parent Shared pointer to the lifecycle node managing this Efferent
+   * instance.
    */
-  explicit Efferent(rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
+  explicit Efferent(const std::string &name,
+                    rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
 
   /**
    * @brief Configures the Efferent component.
    * @return True if configuration is successful.
    */
-  virtual bool configure() = 0;
+  virtual bool configure();
 
   /**
    * @brief Publishes a serialized message to all configured publishers.
@@ -55,26 +57,36 @@ public:
    * each publisher in the `pubs_` list.
    *
    * @tparam MessageT Type of the message to publish.
-   * @param msg Unique pointer to the message to broadcast.
+   * @param msg shared pointer to the message to broadcast.
    */
-  template<class MessageT>
-  void publish(std::unique_ptr<MessageT> msg)
-  {
+  template <class MessageT>
+  void publish(size_t topic_index, std::shared_ptr<MessageT> msg) {
+    if (topic_index >= pubs_.size()) {
+      RCLCPP_WARN(parent_->get_logger(),
+                  "[Efferent] Error publishing: topic index not valid");
+      return;
+    }
+
     rclcpp::Serialization<MessageT> serializer;
     auto untyped_msg = rclcpp::SerializedMessage();
 
     serializer.serialize_message(msg.get(), &untyped_msg);
 
-    for (auto & pub : pubs_) {
-      pub->publish(untyped_msg);
-    }
+    pubs_[topic_index]->publish(untyped_msg);
   }
 
 protected:
   /**< Shared pointer to the parent lifecycle node. */
   rclcpp_lifecycle::LifecycleNode::SharedPtr parent_;
+  std::string name_;
+
   /**< List of generic publishers. */
   std::vector<std::shared_ptr<rclcpp::GenericPublisher>> pubs_;
+
+  /**< List of output topics to publish images. */
+  std::vector<std::string> output_topic_names_;
+  /**< List of output topics types. */
+  std::vector<std::string> output_topic_types_;
 
   /**
    * @brief Creates a publisher for a specified topic and message type.
@@ -82,9 +94,9 @@ protected:
    * @param type The type of messages to publish on the topic.
    * @return True if the publisher was created successfully.
    */
-  bool create_publisher(const std::string & topic, const std::string & type);
+  bool create_publisher(const std::string &topic, const std::string &type);
 };
 
-}  // namespace cs4home_core
+} // namespace cs4home_core
 
-#endif  // CS4HOME_CORE__EFFERENT_HPP_
+#endif // CS4HOME_CORE__EFFERENT_HPP_

@@ -14,9 +14,9 @@
 
 #include <optional>
 
+#include "lifecycle_msgs/msg/state.hpp"
 #include "sensor_msgs/msg/image.hpp"
 #include "vision_msgs/msg/detection2_d_array.hpp"
-#include "lifecycle_msgs/msg/state.hpp"
 
 #include "ament_index_cpp/get_package_share_directory.hpp"
 
@@ -31,21 +31,24 @@
  * @param parent Lifecycle node parent for the component.
  * @return Tuple with the loaded component shared pointer and error message.
  */
-template<class T> std::tuple<typename T::SharedPtr, std::string>
-load_component(
-  const std::string & name, rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-{
+template <class T>
+std::tuple<typename T::SharedPtr, std::string>
+load_component(const std::string &name,
+               rclcpp_lifecycle::LifecycleNode::SharedPtr parent) {
   std::string lib_name = "lib" + name + ".so";
-  void * handle = dlopen(lib_name.c_str(), RTLD_LAZY);
+  void *handle = dlopen(lib_name.c_str(), RTLD_LAZY);
   if (!handle) {
     return {nullptr, "Cannot open library:" + lib_name};
   }
-  using FactoryFunction = typename T::SharedPtr (*)(rclcpp_lifecycle::LifecycleNode::SharedPtr);
-  FactoryFunction create_instance = (FactoryFunction)dlsym(handle, "create_instance");
-  const char * dlsym_error = dlerror();
+  using FactoryFunction =
+      typename T::SharedPtr (*)(rclcpp_lifecycle::LifecycleNode::SharedPtr);
+  FactoryFunction create_instance =
+      (FactoryFunction)dlsym(handle, "create_instance");
+  const char *dlsym_error = dlerror();
   if (dlsym_error) {
     dlclose(handle);
-    return {nullptr, std::string("Cannot load symbol 'create_instance': ") + dlsym_error};
+    return {nullptr, std::string("Cannot load symbol 'create_instance': ") +
+                         dlsym_error};
   }
   return {create_instance(parent), ""};
 }
@@ -53,16 +56,17 @@ load_component(
 using namespace std::chrono_literals;
 
 /**
- * @test Verifies the functionality of the afferent component in "on demand" mode.
+ * @test Verifies the functionality of the afferent component in "on demand"
+ * mode.
  *
- * This test sets up an afferent component to operate in "on demand" mode, where it
- * retrieves messages from a queue rather than processing them immediately via a callback.
- * Messages are published to a topic, and the afferent component is configured to pull
- * messages from this queue as needed. The test ensures that the messages are correctly
- * retrieved in order and that once the queue is empty, further retrievals return `nullptr`.
+ * This test sets up an afferent component to operate in "on demand" mode, where
+ * it retrieves messages from a queue rather than processing them immediately
+ * via a callback. Messages are published to a topic, and the afferent component
+ * is configured to pull messages from this queue as needed. The test ensures
+ * that the messages are correctly retrieved in order and that once the queue is
+ * empty, further retrievals return `nullptr`.
  */
-TEST(cognitive_module_test, afferent_on_demand)
-{
+TEST(cognitive_module_test, afferent_on_demand) {
   // Create main nodes for the test
   auto node = rclcpp_lifecycle::LifecycleNode::make_shared("test_lc_node");
   auto pub_node = rclcpp::Node::make_shared("pub_node");
@@ -74,15 +78,17 @@ TEST(cognitive_module_test, afferent_on_demand)
   exe.add_node(pub_node);
 
   // Configure topics for afferent component
-  std::vector<std::string> topics {"/image"};
+  std::vector<std::string> topics{"/image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load afferent component and verify successful loading
-  auto [afferent, error_afferent] = load_component<cs4home_core::Afferent>(
-    "simple_image_input", node);
+  auto [afferent, error_afferent] =
+      load_component<cs4home_core::Afferent>("simple_image_input", node);
   ASSERT_NE(afferent, nullptr);
 
   // Set the topics parameter and configure afferent component
   node->set_parameter(rclcpp::Parameter("simple_image_input.topics", topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
   ASSERT_TRUE(afferent->configure());
 
   // Publish test messages to the afferent component's subscribed topic
@@ -101,27 +107,27 @@ TEST(cognitive_module_test, afferent_on_demand)
 
   // Retrieve and verify messages from the afferent component's queue
   for (int i = 0; i < 10; i++) {
-    auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>();
+    auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>("/image");
     ASSERT_NE(in_msg, nullptr);
     ASSERT_EQ(i, std::atoi(in_msg->header.frame_id.c_str()));
   }
 
-  // Verify that further retrieval attempts return `nullptr` as the queue is now empty
-  auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>();
+  // Verify that further retrieval attempts return `nullptr` as the queue is now
+  // empty
+  auto in_msg = afferent->get_msg<sensor_msgs::msg::Image>("/image");
   ASSERT_EQ(in_msg, nullptr);
 }
-
 
 /**
  * @test Verifies the functionality of the afferent component in callback mode.
  *
  * This test sets up an afferent component to operate in callback mode, where it
- * subscribes to a topic and processes incoming messages by storing them in a vector
- * for verification. The component listens to `/image` messages and ensures that all
- * received messages are processed and accessible through the callback mechanism.
+ * subscribes to a topic and processes incoming messages by storing them in a
+ * vector for verification. The component listens to `/image` messages and
+ * ensures that all received messages are processed and accessible through the
+ * callback mechanism.
  */
-TEST(cognitive_module_test, afferent_on_subscription)
-{
+TEST(cognitive_module_test, afferent_on_subscription) {
   // Create main nodes for the test
   auto node = rclcpp_lifecycle::LifecycleNode::make_shared("test_lc_node");
   auto pub_node = rclcpp::Node::make_shared("pub_node");
@@ -133,26 +139,27 @@ TEST(cognitive_module_test, afferent_on_subscription)
   exe.add_node(pub_node);
 
   // Setup topics and image storage
-  std::vector<std::string> topics {"/image"};
-  std::vector<std::unique_ptr<rclcpp::SerializedMessage>> images;
+  std::vector<std::string> topics{"/image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
+
+  std::vector<std::shared_ptr<rclcpp::SerializedMessage>> images;
 
   // Load afferent component and verify successful loading
-  auto [afferent, error_afferent] = load_component<cs4home_core::Afferent>(
-    "simple_image_input", node);
+  auto [afferent, error_afferent] =
+      load_component<cs4home_core::Afferent>("simple_image_input", node);
   ASSERT_NE(afferent, nullptr);
 
   // Set the topics parameter and configure afferent mode
   node->set_parameter(rclcpp::Parameter("simple_image_input.topics", topics));
-  afferent->set_mode(cs4home_core::Afferent::CALLBACK);
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
+  afferent->set_mode("/image", cs4home_core::Afferent::CALLBACK);
 
   ASSERT_EQ(afferent->get_mode(), cs4home_core::Afferent::ONDEMAND);
 
-  afferent->set_mode(
-    cs4home_core::Afferent::CALLBACK,
-    [&images](std::unique_ptr<rclcpp::SerializedMessage> msg) {
-      images.push_back(std::move(msg));
-    }
-  );
+  afferent->set_mode("/image", cs4home_core::Afferent::CALLBACK,
+                     [&images](std::shared_ptr<rclcpp::SerializedMessage> msg) {
+                       images.push_back(std::move(msg));
+                     });
   ASSERT_TRUE(afferent->configure());
 
   // Publish test messages to the afferent component's subscribed topic
@@ -176,23 +183,24 @@ TEST(cognitive_module_test, afferent_on_subscription)
     ASSERT_NE(in_msg, nullptr);
 
     rclcpp::Serialization<sensor_msgs::msg::Image> serializer;
-    auto typed_msg = std::make_unique<sensor_msgs::msg::Image>();
+    auto typed_msg = std::make_shared<sensor_msgs::msg::Image>();
     serializer.deserialize_message(in_msg.get(), typed_msg.get());
 
     ASSERT_EQ(i, std::atoi(typed_msg->header.frame_id.c_str()));
   }
 }
 /**
- * @test Verifies the functionality of the efferent component in publishing messages.
+ * @test Verifies the functionality of the efferent component in publishing
+ * messages.
  *
- * This test sets up an efferent component to publish messages on a specified topic.
- * It publishes a series of messages with sequential `frame_id` values and verifies
- * that these messages are received correctly by a subscriber on the same topic.
- * The test ensures that the efferent component is able to correctly configure its
- * publishers and transmit messages to external listeners.
+ * This test sets up an efferent component to publish messages on a specified
+ * topic. It publishes a series of messages with sequential `frame_id` values
+ * and verifies that these messages are received correctly by a subscriber on
+ * the same topic. The test ensures that the efferent component is able to
+ * correctly configure its publishers and transmit messages to external
+ * listeners.
  */
-TEST(cognitive_module_test, efferent)
-{
+TEST(cognitive_module_test, efferent) {
   // Create main nodes for the test
   auto node = rclcpp_lifecycle::LifecycleNode::make_shared("test_lc_node");
   auto sub_node = rclcpp::Node::make_shared("sub_node");
@@ -200,9 +208,8 @@ TEST(cognitive_module_test, efferent)
   // Storage for received messages
   std::vector<sensor_msgs::msg::Image> images;
   auto sub = sub_node->create_subscription<sensor_msgs::msg::Image>(
-    "/image", 100, [&images](sensor_msgs::msg::Image msg) {
-      images.push_back(msg);
-    });
+      "/image", 100,
+      [&images](sensor_msgs::msg::Image msg) { images.push_back(msg); });
 
   // Single-threaded executor to handle callbacks
   rclcpp::executors::SingleThreadedExecutor exe;
@@ -210,22 +217,25 @@ TEST(cognitive_module_test, efferent)
   exe.add_node(sub_node);
 
   // Configure topics for efferent component
-  std::vector<std::string> topics {"/image"};
+  std::vector<std::string> topics{"/image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load efferent component and verify successful loading
-  auto [efferent, error_efferent] = load_component<cs4home_core::Efferent>(
-    "simple_image_output", node);
+  auto [efferent, error_efferent] =
+      load_component<cs4home_core::Efferent>("simple_image_output", node);
   ASSERT_NE(efferent, nullptr);
 
   // Set the topics parameter and configure efferent component
   node->set_parameter(rclcpp::Parameter("simple_image_output.topics", topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_output.types", types));
+
   ASSERT_TRUE(efferent->configure());
 
   // Publish test messages via the efferent component
   for (int i = 0; i < 10; i++) {
-    auto msg = std::make_unique<sensor_msgs::msg::Image>();
+    auto msg = std::make_shared<sensor_msgs::msg::Image>();
     msg->header.frame_id = std::to_string(i);
-    efferent->publish(std::move(msg));
+    efferent->publish(0, msg);
     exe.spin_some();
   }
 
@@ -242,9 +252,9 @@ TEST(cognitive_module_test, efferent)
   }
 }
 
-
 /**
- * @test Verifies the core component's behavior when processing incoming messages.
+ * @test Verifies the core component's behavior when processing incoming
+ * messages.
  *
  * This test sets up an afferent component to receive messages, a core component
  * to process them by doubling the `frame_id` in each message header, and an
@@ -252,20 +262,20 @@ TEST(cognitive_module_test, efferent)
  * series of messages, each with a sequential `frame_id`, and verifies that the
  * processed messages in the efferent component have doubled `frame_id` values.
  */
-TEST(cognitive_module_test, core)
-{
+TEST(cognitive_module_test, core) {
   auto node = rclcpp_lifecycle::LifecycleNode::make_shared("test_lc_node");
   auto pub_node = rclcpp::Node::make_shared("pub_node");
   auto sub_node = rclcpp::Node::make_shared("sub_node");
 
-  // Publisher on /in_image and subscription to processed messages on /out_image.
-  auto pub = pub_node->create_publisher<sensor_msgs::msg::Image>("/in_image", 100);
+  // Publisher on /in_image and subscription to processed messages on
+  // /out_image.
+  auto pub =
+      pub_node->create_publisher<sensor_msgs::msg::Image>("/in_image", 100);
 
   std::vector<sensor_msgs::msg::Image> images;
   auto sub = sub_node->create_subscription<sensor_msgs::msg::Image>(
-    "/out_image", 100, [&images](sensor_msgs::msg::Image msg) {
-      images.push_back(msg);
-    });
+      "/out_image", 100,
+      [&images](sensor_msgs::msg::Image msg) { images.push_back(msg); });
 
   rclcpp::executors::SingleThreadedExecutor exe;
   exe.add_node(node->get_node_base_interface());
@@ -273,23 +283,28 @@ TEST(cognitive_module_test, core)
   exe.add_node(sub_node);
 
   // Setup topics for afferent and efferent components
-  std::vector<std::string> in_topics {"/in_image"};
-  std::vector<std::string> out_topics {"/out_image"};
+  std::vector<std::string> in_topics{"/in_image"};
+  std::vector<std::string> out_topics{"/out_image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load components
-  auto [afferent, error_afferent] = load_component<cs4home_core::Afferent>(
-    "simple_image_input", node);
+  auto [afferent, error_afferent] =
+      load_component<cs4home_core::Afferent>("simple_image_input", node);
   ASSERT_NE(afferent, nullptr);
-  auto [efferent, error_efferent] = load_component<cs4home_core::Efferent>(
-    "simple_image_output", node);
+  auto [efferent, error_efferent] =
+      load_component<cs4home_core::Efferent>("simple_image_output", node);
   ASSERT_NE(efferent, nullptr);
-  auto [core, error_core] = load_component<cs4home_core::Core>(
-    "image_filter", node);
+  auto [core, error_core] =
+      load_component<cs4home_core::Core>("image_filter", node);
   ASSERT_NE(core, nullptr);
 
   // Set parameters and configure components
-  node->set_parameter(rclcpp::Parameter("simple_image_input.topics", in_topics));
-  node->set_parameter(rclcpp::Parameter("simple_image_output.topics", out_topics));
+  node->set_parameter(
+      rclcpp::Parameter("simple_image_input.topics", in_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
+  node->set_parameter(
+      rclcpp::Parameter("simple_image_output.topics", out_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_output.types", types));
   ASSERT_TRUE(afferent->configure());
   ASSERT_TRUE(efferent->configure());
   core->set_afferent(afferent);
@@ -320,29 +335,30 @@ TEST(cognitive_module_test, core)
 }
 
 /**
- * @test Verifies the core component with callback functionality (core_cb) processes incoming
- * messages and republishes them with doubled `frame_id` values.
+ * @test Verifies the core component with callback functionality (core_cb)
+ * processes incoming messages and republishes them with doubled `frame_id`
+ * values.
  *
- * This test sets up an afferent component in callback mode to receive messages, a core
- * component with a callback (`core_cb`) to process the messages by doubling the `frame_id`
- * in each message header, and an efferent component to republish the processed messages.
- * The test publishes a sequence of messages and verifies that the processed messages have
- * doubled `frame_id` values.
+ * This test sets up an afferent component in callback mode to receive messages,
+ * a core component with a callback (`core_cb`) to process the messages by
+ * doubling the `frame_id` in each message header, and an efferent component to
+ * republish the processed messages. The test publishes a sequence of messages
+ * and verifies that the processed messages have doubled `frame_id` values.
  */
-TEST(cognitive_module_test, core_cb)
-{
+TEST(cognitive_module_test, core_cb) {
   auto node = rclcpp_lifecycle::LifecycleNode::make_shared("test_lc_node");
   auto pub_node = rclcpp::Node::make_shared("pub_node");
   auto sub_node = rclcpp::Node::make_shared("sub_node");
 
-  // Publisher on /in_image and subscription to processed messages on /out_image.
-  auto pub = pub_node->create_publisher<sensor_msgs::msg::Image>("/in_image", 100);
+  // Publisher on /in_image and subscription to processed messages on
+  // /out_image.
+  auto pub =
+      pub_node->create_publisher<sensor_msgs::msg::Image>("/in_image", 100);
 
   std::vector<sensor_msgs::msg::Image> images;
   auto sub = sub_node->create_subscription<sensor_msgs::msg::Image>(
-    "/out_image", 100, [&images](sensor_msgs::msg::Image msg) {
-      images.push_back(msg);
-    });
+      "/out_image", 100,
+      [&images](sensor_msgs::msg::Image msg) { images.push_back(msg); });
 
   rclcpp::executors::SingleThreadedExecutor exe;
   exe.add_node(node->get_node_base_interface());
@@ -350,23 +366,28 @@ TEST(cognitive_module_test, core_cb)
   exe.add_node(sub_node);
 
   // Setup topics for afferent and efferent components
-  std::vector<std::string> in_topics {"/in_image"};
-  std::vector<std::string> out_topics {"/out_image"};
+  std::vector<std::string> in_topics{"/in_image"};
+  std::vector<std::string> out_topics{"/out_image"};
+  std::vector<std::string> types{"sensor_msgs/msg/Image"};
 
   // Load components
-  auto [afferent, error_afferent] = load_component<cs4home_core::Afferent>(
-    "simple_image_input", node);
+  auto [afferent, error_afferent] =
+      load_component<cs4home_core::Afferent>("simple_image_input", node);
   ASSERT_NE(afferent, nullptr);
-  auto [efferent, error_efferent] = load_component<cs4home_core::Efferent>(
-    "simple_image_output", node);
+  auto [efferent, error_efferent] =
+      load_component<cs4home_core::Efferent>("simple_image_output", node);
   ASSERT_NE(efferent, nullptr);
-  auto [core, error_core] = load_component<cs4home_core::Core>(
-    "image_filter_cb", node);
+  auto [core, error_core] =
+      load_component<cs4home_core::Core>("image_filter_cb", node);
   ASSERT_NE(core, nullptr);
 
   // Set parameters and configure components
-  node->set_parameter(rclcpp::Parameter("simple_image_input.topics", in_topics));
-  node->set_parameter(rclcpp::Parameter("simple_image_output.topics", out_topics));
+  node->set_parameter(
+      rclcpp::Parameter("simple_image_input.topics", in_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_input.types", types));
+  node->set_parameter(
+      rclcpp::Parameter("simple_image_output.topics", out_topics));
+  node->set_parameter(rclcpp::Parameter("simple_image_output.types", types));
   ASSERT_TRUE(afferent->configure());
   ASSERT_TRUE(efferent->configure());
   core->set_afferent(afferent);
@@ -396,46 +417,46 @@ TEST(cognitive_module_test, core_cb)
   }
 }
 
-
 /**
- * @test Tests the initialization and basic functionality of the CognitiveModule using a configuration file.
+ * @test Tests the initialization and basic functionality of the CognitiveModule
+ * using a configuration file.
  *
- * This test verifies that the CognitiveModule initializes correctly from a configuration file
- * and transitions through the ROS 2 lifecycle states (configure, activate, deactivate).
- * It sets up publishers and subscribers to check that messages are processed with expected modifications
- * (doubling of `frame_id`) and are received correctly after processing.
+ * This test verifies that the CognitiveModule initializes correctly from a
+ * configuration file and transitions through the ROS 2 lifecycle states
+ * (configure, activate, deactivate). It sets up publishers and subscribers to
+ * check that messages are processed with expected modifications (doubling of
+ * `frame_id`) and are received correctly after processing.
  */
-TEST(cognitive_module_test, startup_simple)
-{
+TEST(cognitive_module_test, startup_simple) {
   // Obtain the path to the configuration file
-  std::string pkgpath = ament_index_cpp::get_package_share_directory("cs4home_core");
+  std::string pkgpath =
+      ament_index_cpp::get_package_share_directory("cs4home_core");
   std::string config_file = pkgpath + "/config/startup_simple_1.yaml";
 
   rclcpp::NodeOptions options;
-  options.arguments(
-    {"--ros-args", "--params-file", config_file});
-
+  options.arguments({"--ros-args", "--params-file", config_file});
 
   // Instantiate the CognitiveModule using the specified configuration file
-  auto cm1 = cs4home_core::CognitiveModule::make_shared("cognitive_module_1", options);
+  auto cm1 =
+      cs4home_core::CognitiveModule::make_shared("cognitive_module_1", options);
 
   ASSERT_EQ(std::string(cm1->get_name()), "cognitive_module_1");
 
   // Verify the number of parameters loaded from the configuration file
   auto params = cm1->list_parameters({}, 0);
-  ASSERT_EQ(params.names.size(), 7u);
+  ASSERT_EQ(params.names.size(), 8u);
 
   // Set up publisher and subscriber nodes for testing message processing
   auto pub_node = rclcpp::Node::make_shared("pub_node");
   auto sub_node = rclcpp::Node::make_shared("sub_node");
 
-  auto pub = pub_node->create_publisher<sensor_msgs::msg::Image>("/image_raw", 100);
+  auto pub =
+      pub_node->create_publisher<sensor_msgs::msg::Image>("/image_raw", 100);
 
   std::vector<sensor_msgs::msg::Image> images;
   auto sub = sub_node->create_subscription<sensor_msgs::msg::Image>(
-    "/detections", 100, [&images](sensor_msgs::msg::Image msg) {
-      images.push_back(msg);
-    });
+      "/detections", 100,
+      [&images](sensor_msgs::msg::Image msg) { images.push_back(msg); });
 
   rclcpp::executors::SingleThreadedExecutor exe;
   exe.add_node(cm1->get_node_base_interface());
@@ -443,11 +464,14 @@ TEST(cognitive_module_test, startup_simple)
   exe.add_node(sub_node);
 
   // Transition the CognitiveModule through the lifecycle states
-  cm1->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
-  ASSERT_EQ(cm1->get_current_state().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
+  cm1->trigger_transition(
+      lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+  ASSERT_EQ(cm1->get_current_state().id(),
+            lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
   cm1->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
-  ASSERT_EQ(cm1->get_current_state().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
+  ASSERT_EQ(cm1->get_current_state().id(),
+            lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE);
 
   // Publish a series of messages to test processing by the CognitiveModule
   sensor_msgs::msg::Image msg;
@@ -463,18 +487,20 @@ TEST(cognitive_module_test, startup_simple)
   }
 
   // Transition the module back to inactive state
-  cm1->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
-  ASSERT_EQ(cm1->get_current_state().id(), lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
+  cm1->trigger_transition(
+      lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
+  ASSERT_EQ(cm1->get_current_state().id(),
+            lifecycle_msgs::msg::State::PRIMARY_STATE_INACTIVE);
 
-  // Verify that the messages were processed correctly with doubled frame_id values
+  // Verify that the messages were processed correctly with doubled frame_id
+  // values
   ASSERT_EQ(images.size(), 10);
   for (int i = 0; i < 10; i++) {
     ASSERT_EQ(i * 2, std::atoi(images[i].header.frame_id.c_str()));
   }
 }
 
-int main(int argc, char ** argv)
-{
+int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   rclcpp::init(argc, argv);
 

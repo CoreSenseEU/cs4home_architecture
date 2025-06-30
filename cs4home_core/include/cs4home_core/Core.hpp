@@ -16,6 +16,7 @@
 #define CS4HOME_CORE__CORE_HPP_
 
 #include <memory>
+#include <string>
 
 #include "cs4home_core/Afferent.hpp"
 #include "cs4home_core/Efferent.hpp"
@@ -40,7 +41,8 @@ public:
    * @brief Constructs a Core object associated with a parent lifecycle node.
    * @param parent Shared pointer to the lifecycle node managing this Core instance.
    */
-  explicit Core(rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
+  explicit Core(
+    const std::string & name, rclcpp_lifecycle::LifecycleNode::SharedPtr parent);
 
   /**
    * @brief Configures the Core component.
@@ -75,6 +77,8 @@ public:
 protected:
   /** Shared pointer to the parent lifecycle node. */
   rclcpp_lifecycle::LifecycleNode::SharedPtr parent_;
+
+  std::string name_;
   /** Shared pointer to the Afferent component. */
   cs4home_core::Afferent::SharedPtr afferent_;
   /** Shared pointer to the Efferent component. */

@@ -17,8 +17,10 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "cs4home_core/CognitiveModule.hpp"
+#include "cs4home_core/Flow.hpp"
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -39,10 +41,12 @@ public:
   using CallbackReturnT = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
   /**
-   * @brief Constructs a Master lifecycle node with the specified options.
+   * @brief Constructs a Master cascade lifecycle node with the specified options.
    * @param options Node options to configure the Master node.
    */
-  explicit Master(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+  explicit Master(
+    const std::string & name,
+    const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   /**
    * @brief Configures the Master node.
@@ -86,9 +90,10 @@ public:
    */
   CallbackReturnT on_error(const rclcpp_lifecycle::State & state);
 
+  const std::map<std::string, Flow::SharedPtr> & get_flows() const {return flows_;}
+
 protected:
-  /** Map of cognitive modules managed by the Master node. */
-  std::map<std::string, cs4home_core::CognitiveModule::SharedPtr> cog_modules_;
+  std::map<std::string, Flow::SharedPtr> flows_;
 };
 
 }  // namespace cs4home_core

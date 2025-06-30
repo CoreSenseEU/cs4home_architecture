@@ -12,41 +12,61 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <initializer_list>
 #include <list>
 #include <string>
 #include <vector>
-#include <initializer_list>
 
 #include "cs4home_core/Flow.hpp"
 
-#include "rclcpp/rclcpp.hpp"
 #include "rclcpp/macros.hpp"
+#include "rclcpp/rclcpp.hpp"
 
-namespace cs4home_core
-{
+namespace cs4home_core {
 
 /**
  * @brief Constructs a Flow object with a list of nodes.
  * @param nodes A vector of node names to initialize the flow sequence.
  */
-Flow::Flow(const std::vector<std::string> & nodes)
-: nodes_(nodes)
-{
+Flow::Flow(const std::string &name) : CascadeLifecycleNode(name) {
+  trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
+}
+
+Flow::Flow(const std::string &name, const std::vector<std::string> &nodes)
+    : Flow(name) {
+  set_flow(nodes);
+}
+
+void Flow::set_flow(const std::vector<std::string> &nodes) {
+  clear_activation();
+
+  nodes_ = nodes;
+
+  for (const auto &node : nodes) {
+    RCLCPP_INFO(this->get_logger(), "flow: %s", node.c_str());
+    add_activation(node);
+  }
+}
+
+void Flow::activate() {
+  trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_ACTIVATE);
+}
+
+void Flow::deactivate() {
+  trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_DEACTIVATE);
 }
 
 /**
  * @brief Prints the sequence of nodes in the flow to the standard output.
  *
- * This function outputs each node name in the flow, prefixed by an arrow (->) to
- * represent the sequence visually.
+ * This function outputs each node name in the flow, prefixed by an arrow (->)
+ * to represent the sequence visually.
  */
-void
-Flow::print() const
-{
-  for (const auto & node : nodes_) {
+void Flow::print() const {
+  for (const auto &node : nodes_) {
     std::cout << " -> " << node;
   }
   std::cout << std::endl;
 }
 
-}  // namespace cs4home_core
+} // namespace cs4home_core

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(cs4home_core)
 
 set(CMAKE_BUILD_TYPE debug)
@@ -11,11 +11,13 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
+find_package(rclcpp_cascade_lifecycle REQUIRED)
 find_package(rclcpp_components REQUIRED)
 
 set(dependencies
   rclcpp
   rclcpp_lifecycle
+  rclcpp_cascade_lifecycle
   rclcpp_components
 )
 

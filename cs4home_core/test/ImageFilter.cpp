@@ -18,59 +18,59 @@
 #include "sensor_msgs/msg/image.hpp"
 
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
-#include "rclcpp/macros.hpp"
 
 using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 /**
  * @class ImageFilter
- * @brief Core component that filters incoming image messages by modifying their headers and
- *        republishing them on a timer.
+ * @brief Core component that filters incoming image messages by modifying their
+ * headers and republishing them on a timer.
  */
-class ImageFilter : public cs4home_core::Core
-{
+class ImageFilter : public cs4home_core::Core {
 public:
   RCLCPP_SMART_PTR_DEFINITIONS(ImageFilter)
 
-
   /**
-   * @brief Constructs an ImageFilter object and initializes the parent lifecycle node.
-   * @param parent Shared pointer to the lifecycle node managing this ImageFilter instance.
+   * @brief Constructs an ImageFilter object and initializes the parent
+   * lifecycle node.
+   * @param parent Shared pointer to the lifecycle node managing this
+   * ImageFilter instance.
    */
 
   explicit ImageFilter(rclcpp_lifecycle::LifecycleNode::SharedPtr parent)
-  : Core(parent)
-  {
+      : Core("image_filter", parent) {
     RCLCPP_DEBUG(parent_->get_logger(), "Core created: [ImageFilter]");
   }
 
   /**
    * @brief Processes an incoming image message by modifying its header.
    *
-   * The `frame_id` in the image header is converted to an integer, doubled, and set as the new
-   * `frame_id`. The modified message is then sent to the efferent component.
+   * The `frame_id` in the image header is converted to an integer, doubled, and
+   * set as the new `frame_id`. The modified message is then sent to the
+   * efferent component.
    *
-   * @param msg Unique pointer to the incoming image message of type `sensor_msgs::msg::Image`.
+   * @param msg shared pointer to the incoming image message of type
+   * `sensor_msgs::msg::Image`.
    */
-  void process_in_image(sensor_msgs::msg::Image::UniquePtr msg)
-  {
+  void process_in_image(std::shared_ptr<sensor_msgs::msg::Image> msg) {
     int counter = std::atoi(msg->header.frame_id.c_str());
     counter = counter * 2;
     msg->header.frame_id = std::to_string(counter);
 
-    efferent_->publish(std::move(msg));
+    efferent_->publish(0, msg);
   }
 
   /**
-   * @brief Timer callback function that retrieves an image message and processes it.
+   * @brief Timer callback function that retrieves an image message and
+   * processes it.
    *
-   * This function is called periodically and attempts to retrieve an image message from the
-   * afferent component. If a message is received, it is passed to `process_in_image`.
+   * This function is called periodically and attempts to retrieve an image
+   * message from the afferent component. If a message is received, it is passed
+   * to `process_in_image`.
    */
-  void timer_callback()
-  {
-    auto msg = afferent_->get_msg<sensor_msgs::msg::Image>();
+  void timer_callback() {
+    auto msg = afferent_->get_msg<sensor_msgs::msg::Image>(0);
     if (msg != nullptr) {
       process_in_image(std::move(msg));
     }
@@ -80,8 +80,7 @@ public:
    * @brief Configures the ImageFilter component.
    * @return True if configuration is successful.
    */
-  bool configure() override
-  {
+  bool configure() override {
     RCLCPP_DEBUG(parent_->get_logger(), "Core configured");
     return true;
   }
@@ -93,10 +92,9 @@ public:
    *
    * @return True if activation is successful.
    */
-  bool activate() override
-  {
+  bool activate() override {
     timer_ = parent_->create_wall_timer(
-      50ms, std::bind(&ImageFilter::timer_callback, this));
+        50ms, std::bind(&ImageFilter::timer_callback, this));
     return true;
   }
 
@@ -107,14 +105,14 @@ public:
    *
    * @return True if deactivation is successful.
    */
-  bool deactivate() override
-  {
+  bool deactivate() override {
     timer_ = nullptr;
     return true;
   }
 
 private:
-  rclcpp::TimerBase::SharedPtr timer_; /**< Timer for periodic execution of `timer_callback`. */
+  rclcpp::TimerBase::SharedPtr
+      timer_; /**< Timer for periodic execution of `timer_callback`. */
 };
 
 /// Registers the ImageFilter component with the ROS 2 class loader
