@@ -12,6 +12,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-24.04
+    env:
+      # Tests cannot create ~/.ros/log in the runner
+      ROS_LOG_DIR: /tmp/ros_log
     strategy:
       fail-fast: false
       matrix:
@@ -22,6 +25,8 @@ jobs:
           required-ros-distributions: ${{ matrix.ros_distro }}
       - name: Install extra dependencies
         run: sudo apt-get install -y ros-${{ matrix.ros_distro }}-vision-msgs 
+      - name: Add the ROS libraries to the library path (needed by Kilted tests)
+        run: echo "LD_LIBRARY_PATH=/opt/ros/${{ matrix.ros_distro }}/lib:${LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
       - uses: ros-tooling/action-ros-ci@0.4.8
         with:
           package-name: cs4home_core
