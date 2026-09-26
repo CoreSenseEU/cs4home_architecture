@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['parent_5f_0',['parent_',['../classcs4home__core_1_1Afferent.html#a79fe952c06bf535e4a7b2a193cca4b40',1,'cs4home_core::Afferent::parent_'],['../classcs4home__core_1_1Core.html#a79fe952c06bf535e4a7b2a193cca4b40',1,'cs4home_core::Core::parent_'],['../classcs4home__core_1_1Coupling.html#a79fe952c06bf535e4a7b2a193cca4b40',1,'cs4home_core::Coupling::parent_'],['../classcs4home__core_1_1Efferent.html#a79fe952c06bf535e4a7b2a193cca4b40',1,'cs4home_core::Efferent::parent_'],['../classcs4home__core_1_1Meta.html#a79fe952c06bf535e4a7b2a193cca4b40',1,'cs4home_core::Meta::parent_']]],
-  ['print_1',['print',['../classcs4home__core_1_1Flow.html#acd0f82d3c49b8a5dd436d4003c44b713',1,'cs4home_core::Flow']]],
-  ['process_5fin_5fimage_2',['process_in_image',['../classImageFilter.html#a01b541e3bbfdd9a91a76badbd8dd8f64',1,'ImageFilter::process_in_image()'],['../classImageFilterCB.html#a89c1952582e3b6a94411650a69c800a4',1,'ImageFilterCB::process_in_image()']]],
-  ['publish_3',['publish',['../classcs4home__core_1_1Efferent.html#a05c1fbd4ecfe2aa17abf1a6235c57613',1,'cs4home_core::Efferent']]],
-  ['publish_5fimage_4',['publish_image',['../classSimpleImageOutput.html#a15c05749e158c409264b0fee345f6053',1,'SimpleImageOutput']]],
-  ['pubs_5f_5',['pubs_',['../classcs4home__core_1_1Efferent.html#a952a39ee3d7cb2dbabf7558f3d716a40',1,'cs4home_core::Efferent']]]
+  ['on_5factivate_0',['on_activate',['../classcs4home__core_1_1CognitiveModule.html#a26f6915d7f6c74f8cf2e766e352ef4a1',1,'cs4home_core::CognitiveModule::on_activate()'],['../classcs4home__core_1_1Master.html#a26f6915d7f6c74f8cf2e766e352ef4a1',1,'cs4home_core::Master::on_activate()']]],
+  ['on_5fcleanup_1',['on_cleanup',['../classcs4home__core_1_1CognitiveModule.html#a51a30cb3859b0fc27bd0aafaa778acb2',1,'cs4home_core::CognitiveModule::on_cleanup()'],['../classcs4home__core_1_1Master.html#a51a30cb3859b0fc27bd0aafaa778acb2',1,'cs4home_core::Master::on_cleanup()']]],
+  ['on_5fconfigure_2',['on_configure',['../classcs4home__core_1_1CognitiveModule.html#a316621c227e6363944e9d141fc227697',1,'cs4home_core::CognitiveModule::on_configure()'],['../classcs4home__core_1_1Master.html#a316621c227e6363944e9d141fc227697',1,'cs4home_core::Master::on_configure()']]],
+  ['on_5fdeactivate_3',['on_deactivate',['../classcs4home__core_1_1CognitiveModule.html#afc8a8fa2ed2c7efe041cde46ce4c3c9b',1,'cs4home_core::CognitiveModule::on_deactivate()'],['../classcs4home__core_1_1Master.html#afc8a8fa2ed2c7efe041cde46ce4c3c9b',1,'cs4home_core::Master::on_deactivate()']]],
+  ['on_5ferror_4',['on_error',['../classcs4home__core_1_1CognitiveModule.html#a9b0782b915f4798a61ae8b9e56ebd5fb',1,'cs4home_core::CognitiveModule::on_error()'],['../classcs4home__core_1_1Master.html#a9b0782b915f4798a61ae8b9e56ebd5fb',1,'cs4home_core::Master::on_error()']]],
+  ['on_5fshutdown_5',['on_shutdown',['../classcs4home__core_1_1CognitiveModule.html#a38b74771f6ab23805f990786e4d6f806',1,'cs4home_core::CognitiveModule::on_shutdown()'],['../classcs4home__core_1_1Master.html#a38b74771f6ab23805f990786e4d6f806',1,'cs4home_core::Master::on_shutdown()']]],
+  ['ondemand_6',['ONDEMAND',['../classcs4home__core_1_1Afferent.html#ac726900539dfc6093714509f8143952fa2545affe7f794f55ba8ce68836953efd',1,'cs4home_core::Afferent']]]
 ];

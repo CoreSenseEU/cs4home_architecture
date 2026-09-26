@@ -1,6 +1,12 @@
 var searchData=
 [
-  ['test_0',['TEST',['../cognitive__module__test_8cpp.html#a91dccc85e6d55e22cfad72e516af7ec5',1,'TEST(cognitive_module_test, afferent_on_demand):&#160;cognitive_module_test.cpp'],['../cognitive__module__test_8cpp.html#a4092fb7799b0ef7bd5fa861e53904a36',1,'TEST(cognitive_module_test, afferent_on_subscription):&#160;cognitive_module_test.cpp'],['../cognitive__module__test_8cpp.html#a471ac84bb32a3c56238f1b0de7c451b6',1,'TEST(cognitive_module_test, efferent):&#160;cognitive_module_test.cpp'],['../cognitive__module__test_8cpp.html#a06368dda46db7573c8e6737815468e4f',1,'TEST(cognitive_module_test, core):&#160;cognitive_module_test.cpp'],['../cognitive__module__test_8cpp.html#a3f957425afcdfee04c6a8039ff7fc8f7',1,'TEST(cognitive_module_test, core_cb):&#160;cognitive_module_test.cpp'],['../cognitive__module__test_8cpp.html#a5c3746b9c7052e9f523a24843bb70cfa',1,'TEST(cognitive_module_test, startup_simple):&#160;cognitive_module_test.cpp'],['../master__test_8cpp.html#a1fa57a7869252e2dcb81fc28615a1f17',1,'TEST(flow_test, flow_creation):&#160;master_test.cpp']]],
-  ['test_20list_1',['Test List',['../test.html',1,'']]],
-  ['timer_5fcallback_2',['timer_callback',['../classImageFilter.html#afbe59c6bb430e9e6479313e798bc726b',1,'ImageFilter']]]
+  ['set_5fafferent_0',['set_afferent',['../classcs4home__core_1_1Core.html#ab600a71d3bf23b72ea10dae1d1bb6fd5',1,'cs4home_core::Core']]],
+  ['set_5fefferent_1',['set_efferent',['../classcs4home__core_1_1Core.html#a727b12b8f5f47e8123a3ba6aa5aa0703',1,'cs4home_core::Core']]],
+  ['set_5fmax_5fqueue_5fsize_2',['set_max_queue_size',['../classcs4home__core_1_1Afferent.html#a497d0b569659fedcade8ebc11f32ed3a',1,'cs4home_core::Afferent']]],
+  ['set_5fmode_3',['set_mode',['../classcs4home__core_1_1Afferent.html#ab8105d79a5323ad64325853d0fdd583b',1,'cs4home_core::Afferent']]],
+  ['simpleimageinput_4',['SimpleImageInput',['../classSimpleImageInput.html',1,'SimpleImageInput'],['../classSimpleImageInput.html#a1c85c3be129b5a1c12368c715c97f992',1,'SimpleImageInput::SimpleImageInput()']]],
+  ['simpleimageinput_2ecpp_5',['SimpleImageInput.cpp',['../SimpleImageInput_8cpp.html',1,'']]],
+  ['simpleimageoutput_6',['SimpleImageOutput',['../classSimpleImageOutput.html',1,'SimpleImageOutput'],['../classSimpleImageOutput.html#a944368c8c0023bdd511327931f744d99',1,'SimpleImageOutput::SimpleImageOutput()']]],
+  ['simpleimageoutput_2ecpp_7',['SimpleImageOutput.cpp',['../SimpleImageOutput_8cpp.html',1,'']]],
+  ['subs_5f_8',['subs_',['../classcs4home__core_1_1Afferent.html#a7792562987235be66c27fc2257e33ad4',1,'cs4home_core::Afferent']]]
 ];
